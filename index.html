@@ -2,9 +2,9 @@
 <html lang="tl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Canteen Order Hub mplace</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#176b4a">
+<title>Canteen Order Hub Mplace</title>
 <style>
 :root {
   --green:#176b4a;
@@ -34,7 +34,9 @@ button {
   color:white;
   font-weight:bold;
   cursor:pointer;
+  font-size:14px;
 }
+button:disabled { opacity:.5;cursor:not-allowed; }
 nav button { background:#ffffff25; }
 nav button.active { background:white;color:var(--green); }
 main { max-width:1000px;margin:auto;padding:15px; }
@@ -53,20 +55,21 @@ main { max-width:1000px;margin:auto;padding:15px; }
 .food {
   border:1px solid #ddd;
   border-radius:10px;
-  padding:8px;
+  padding:10px;
   background:white;
 }
-.food h3 { font-size:13px;margin:4px 0 2px; }
-.food p { font-size:12px;margin:2px 0; }
-.food button { padding:7px 8px;font-size:12px; }
-.food .emoji { font-size:22px; }
-.price { color:var(--green);font-weight:bold;font-size:14px; }
+.food h3 { font-size:14px;margin:6px 0 3px; }
+.food p { font-size:12px;margin:4px 0; }
+.food button { padding:8px;font-size:12px;width:100%; }
+.food .emoji { font-size:27px; }
+.price { color:var(--green);font-weight:bold;font-size:15px; }
 input,select {
   width:100%;
   padding:12px;
   border:1px solid #ccc;
   border-radius:8px;
   font-size:16px;
+  background:white;
 }
 label { display:block;margin:12px 0 5px;font-weight:bold; }
 .hidden { display:none!important; }
@@ -86,565 +89,684 @@ label { display:block;margin:12px 0 5px;font-weight:bold; }
   border-radius:10px;
   padding:13px;
   margin-top:12px;
+  overflow-wrap:anywhere;
 }
 .status {
   display:inline-block;
-  padding:4px 9px;
+  padding:5px 10px;
   border-radius:20px;
   background:#fff0d5;
   font-size:12px;
 }
 .status.ok { background:#dff3e5;color:green; }
-.danger { background:#ffeaea;color:red; }
+.danger { background:#ffeaea;color:#b93838; }
 .secondary { background:#e8f4ed;color:#176b4a; }
+.full { width:100%; }
+.notice {
+  padding:12px;
+  border-radius:9px;
+  background:#e8f4ed;
+  margin:10px 0;
+}
+.muted { color:#68756e;font-size:12px; }
+.actions { display:flex;gap:6px;flex-wrap:wrap;margin-top:10px; }
+.actions button { flex:1; }
+hr { border:0;border-top:1px solid #eee;margin:18px 0; }
 @media(max-width:500px) {
   main { padding:10px; }
   .panel { padding:13px; }
+  .brand { font-size:20px; }
+  .grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .item { align-items:flex-start; }
 }
 </style>
 </head>
-
 <body>
-
 <header>
   <div class="brand">🍽️ Canteen Order Hub Mplace</div>
   <p>Order Online • Canteen Menu</p>
-
   <nav>
     <button onclick="showPage('shop')">Menu</button>
     <button onclick="showPage('cart')">🛒 Cart (<span id="cartCount">0</span>)</button>
     <button onclick="showPage('admin')">Admin</button>
   </nav>
 </header>
-
 <main>
-
-<!-- CUSTOMER MENU -->
 <section id="shopPage">
   <div class="panel">
     <h2>Today's Menu</h2>
+    <div id="connectionStatus" class="notice">Connecting to Google Sheets...</div>
     <div class="tabs" id="canteenTabs"></div>
     <div class="grid" id="menuGrid"></div>
   </div>
 </section>
-
-<!-- CART -->
 <section id="cartPage" class="hidden">
   <div class="panel">
     <h2>🛒 My Cart</h2>
     <div id="cartItems"></div>
-    <h3 id="cartTotal">Total: ₱0</h3>
-    <button onclick="showPage('checkout')">Checkout</button>
+    <h3 id="cartTotal">Total: ₱0.00</h3>
+    <button class="full" onclick="showPage('checkout')">Checkout</button>
+    <button class="secondary full" style="margin-top:8px" onclick="showPage('shop')">Continue Shopping</button>
   </div>
 </section>
-
-<!-- CHECKOUT -->
 <section id="checkoutPage" class="hidden">
   <div class="panel">
     <h2>Customer Information</h2>
-
     <label>Full Name</label>
-    <input id="custName" placeholder="Your name">
-
+    <input id="custName" placeholder="Your name" autocomplete="name">
     <label>Cellphone Number</label>
-    <input id="custPhone" type="tel" placeholder="09XXXXXXXXX">
-
+    <input id="custPhone" type="tel" inputmode="tel" placeholder="09XXXXXXXXX">
     <label>Payment Method</label>
     <select id="payment">
       <option>Cash</option>
       <option>GCash</option>
     </select>
-
     <label>Note</label>
     <input id="custNote" placeholder="Optional">
-
     <div id="checkoutSummary"></div>
-
-    <button onclick="placeOrder()">SUBMIT ORDER</button>
-    <button class="secondary" onclick="showPage('cart')">Back</button>
+    <button id="submitOrderBtn" class="full" onclick="placeOrder()">SUBMIT ORDER</button>
+    <button class="secondary full" style="margin-top:8px" onclick="showPage('cart')">Back</button>
   </div>
 </section>
-
-<!-- ADMIN -->
 <section id="adminPage" class="hidden">
-
   <div id="adminLogin" class="panel">
     <h2>🔐 Admin Login</h2>
     <label>Admin PIN</label>
-    <input type="password" id="adminPin" placeholder="Enter PIN">
-    <button onclick="loginAdmin()">Login</button>
+    <input type="password" id="adminPin"
+      placeholder="Enter PIN"
+      inputmode="numeric"
+      pattern="[0-9]*"
+      autocomplete="off">
+    <button class="full" style="margin-top:10px" onclick="loginAdmin()">Login</button>
+    <p class="muted">Enter your administrator PIN.</p>
   </div>
-
   <div id="adminDash" class="panel hidden">
     <h2>Admin Dashboard</h2>
-
     <div class="tabs">
-      <button onclick="adminTab('orders')">Orders</button>
-      <button onclick="adminTab('manage')">Manage Menu</button>
+      <button onclick="adminTab('orders')">📦 Orders</button>
+      <button onclick="adminTab('manage')">🍽️ Manage Menu</button>
     </div>
-
     <div id="ordersAdmin"></div>
     <div id="manageAdmin" class="hidden"></div>
-
-    <button class="secondary" onclick="logoutAdmin()">Logout</button>
+    <button class="secondary full" style="margin-top:15px" onclick="logoutAdmin()">Logout</button>
   </div>
-
 </section>
-
 <section id="successPage" class="hidden">
   <div class="panel">
     <h2>✅ Order Submitted!</h2>
-    <p>Hintayin ang confirmation ng admin.</p>
-    <button onclick="showPage('shop')">Back to Menu</button>
+    <p>Na-save ang iyong order. Hintayin ang confirmation ng admin.</p>
+    <div id="successOrderId"></div>
+    <button class="full" onclick="showPage('shop')">Back to Menu</button>
   </div>
 </section>
-
 </main>
-
 <script>
-
-// ADMIN SETTINGS
+// ===================================
+// SETTINGS
+// ===================================
 const ADMIN_PIN = "1234";
-
-// Google Sheet connection
-const SHEET_URL = 
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbzG_AWtDctxFfWzOMh3MWxWY7yQ5hQ98IUJkOlXpgY9dF8_JYBoF6SW33nKvNV5h2UH4Q/exec";
-
-// STORAGE
+const SHEET_URL =
+"https://script.google.com/macros/s/AKfycbzG_AWtDctxFfWzOMh3MWxWY7yQ5hQ98IUJkOlXpgY9dF8_JYBoF6SW33nKvNV5h2UH4Q/exec";
 const MENU_KEY = "canteen_menu";
 const ORDER_KEY = "canteen_orders";
-
 const defaultMenu = [
- {id:1,name:"Chicken Adobo",price:55,canteen:"Canteen 1",available:true,emoji:"🍗"},
- {id:2,name:"Pork Menudo",price:50,canteen:"Canteen 1",available:true,emoji:"🍲"},
- {id:3,name:"Tortang Talong",price:35,canteen:"Canteen 1",available:true,emoji:"🍆"},
- {id:4,name:"Fried Chicken",price:60,canteen:"Canteen 2",available:true,emoji:"🍗"},
- {id:5,name:"Pancit Bihon",price:30,canteen:"Canteen 2",available:true,emoji:"🍜"},
- {id:6,name:"Tapsilog",price:65,canteen:"Canteen 2",available:true,emoji:"🍳"},
- {id:7,name:"Adobong Baboy",price:65,canteen:"Canteen 1",available:true,emoji:"🥘"},
- {id:8,name:"Adobong Manok",price:60,canteen:"Canteen 1",available:true,emoji:"🍗"},
- {id:9,name:"Menudo",price:55,canteen:"Canteen 1",available:true,emoji:"🍲"},
- {id:10,name:"Afritada",price:60,canteen:"Canteen 1",available:true,emoji:"🍛"},
- {id:11,name:"Caldereta",price:75,canteen:"Canteen 1",available:true,emoji:"🍖"},
- {id:12,name:"Mechado",price:70,canteen:"Canteen 1",available:true,emoji:"🥩"},
- {id:13,name:"Bicol Express",price:65,canteen:"Canteen 2",available:true,emoji:"🌶️"},
- {id:14,name:"Sisig",price:70,canteen:"Canteen 2",available:true,emoji:"🍳"},
- {id:15,name:"Dinuguan",price:55,canteen:"Canteen 2",available:true,emoji:"🍲"},
- {id:16,name:"Pork Steak / Bistek Tagalog",price:60,canteen:"Canteen 2",available:true,emoji:"🥩"},
- {id:17,name:"Lechon Kawali",price:75,canteen:"Canteen 2",available:true,emoji:"🥓"},
- {id:18,name:"Tokwa't Baboy",price:50,canteen:"Canteen 2",available:true,emoji:"🍢"},
- {id:19,name:"Lumpiang Shanghai",price:40,canteen:"Canteen 1",available:true,emoji:"🥟"},
- {id:20,name:"Chicken Curry",price:65,canteen:"Canteen 1",available:true,emoji:"🍛"},
- {id:21,name:"Tinola",price:55,canteen:"Canteen 2",available:true,emoji:"🍲"},
- {id:22,name:"Pork Binagoongan",price:60,canteen:"Canteen 2",available:true,emoji:"🍲"},
- {id:23,name:"Igado",price:60,canteen:"Canteen 1",available:true,emoji:"🍢"},
- {id:24,name:"Coke",price:20,canteen:"Canteen 1",available:true,emoji:"🥤"},
- {id:25,name:"Royal",price:20,canteen:"Canteen 1",available:true,emoji:"🥤"},
- {id:26,name:"Sprite",price:20,canteen:"Canteen 1",available:true,emoji:"🥤"},
- {id:27,name:"Saging",price:10,canteen:"Canteen 1",available:true,emoji:"🍌"}
+{id:"1",name:"Chicken Adobo",price:55,canteen:"Canteen 1",available:true,emoji:"🍗"},
+{id:"2",name:"Pork Menudo",price:50,canteen:"Canteen 1",available:true,emoji:"🍲"},
+{id:"3",name:"Tortang Talong",price:35,canteen:"Canteen 1",available:true,emoji:"🍆"},
+{id:"4",name:"Fried Chicken",price:60,canteen:"Canteen 2",available:true,emoji:"🍗"},
+{id:"5",name:"Pancit Bihon",price:30,canteen:"Canteen 2",available:true,emoji:"🍜"},
+{id:"6",name:"Tapsilog",price:65,canteen:"Canteen 2",available:true,emoji:"🍳"},
+{id:"7",name:"Adobong Baboy",price:65,canteen:"Canteen 1",available:true,emoji:"🥘"},
+{id:"8",name:"Adobong Manok",price:60,canteen:"Canteen 1",available:true,emoji:"🍗"},
+{id:"9",name:"Menudo",price:55,canteen:"Canteen 1",available:true,emoji:"🍲"},
+{id:"10",name:"Afritada",price:60,canteen:"Canteen 1",available:true,emoji:"🍛"},
+{id:"11",name:"Caldereta",price:75,canteen:"Canteen 1",available:true,emoji:"🍖"},
+{id:"12",name:"Mechado",price:70,canteen:"Canteen 1",available:true,emoji:"🥩"},
+{id:"13",name:"Bicol Express",price:65,canteen:"Canteen 2",available:true,emoji:"🌶️"},
+{id:"14",name:"Sisig",price:70,canteen:"Canteen 2",available:true,emoji:"🍳"},
+{id:"15",name:"Dinuguan",price:55,canteen:"Canteen 2",available:true,emoji:"🍲"},
+{id:"16",name:"Pork Steak / Bistek Tagalog",price:60,canteen:"Canteen 2",available:true,emoji:"🥩"},
+{id:"17",name:"Lechon Kawali",price:75,canteen:"Canteen 2",available:true,emoji:"🥓"},
+{id:"18",name:"Tokwa't Baboy",price:50,canteen:"Canteen 2",available:true,emoji:"🍢"},
+{id:"19",name:"Lumpiang Shanghai",price:40,canteen:"Canteen 1",available:true,emoji:"🥟"},
+{id:"20",name:"Chicken Curry",price:65,canteen:"Canteen 1",available:true,emoji:"🍛"},
+{id:"21",name:"Tinola",price:55,canteen:"Canteen 2",available:true,emoji:"🍲"},
+{id:"22",name:"Pork Binagoongan",price:60,canteen:"Canteen 2",available:true,emoji:"🍲"},
+{id:"23",name:"Igado",price:60,canteen:"Canteen 1",available:true,emoji:"🍢"},
+{id:"24",name:"Coke",price:20,canteen:"Canteen 1",available:true,emoji:"🥤"},
+{id:"25",name:"Royal",price:20,canteen:"Canteen 1",available:true,emoji:"🥤"},
+{id:"26",name:"Sprite",price:20,canteen:"Canteen 1",available:true,emoji:"🥤"},
+{id:"27",name:"Saging",price:10,canteen:"Canteen 1",available:true,emoji:"🍌"}
 ];
-
-// Bumabago lang ang bilang na ito (MENU_VERSION) kapag binago mo ang defaultMenu sa code.
-// Kapag iba ang naka-save na version sa localStorage, awtomatikong gagamitin ang bagong defaultMenu.
-const MENU_VERSION = 2;
-let savedVersion = Number(localStorage.getItem("canteen_menu_version") || 0);
-let menu;
-if (savedVersion === MENU_VERSION) {
-  menu = JSON.parse(localStorage.getItem(MENU_KEY) || "null") || defaultMenu;
-} else {
-  menu = defaultMenu;
-  localStorage.setItem("canteen_menu_version", MENU_VERSION);
+// ===================================
+// STORAGE
+// ===================================
+function readStorage(key, fallback) {
+  try {
+    const value = localStorage.getItem(key);
+    return value ? JSON.parse(value) : fallback;
+  } catch(e) {
+    return fallback;
+  }
 }
-let orders = JSON.parse(localStorage.getItem(ORDER_KEY) || "[]");
+let menu = readStorage(MENU_KEY, defaultMenu);
+let orders = readStorage(ORDER_KEY, []);
 let cart = [];
 let currentCanteen = "All";
 let isAdmin = false;
-
 function saveData() {
- localStorage.setItem(MENU_KEY,JSON.stringify(menu));
- localStorage.setItem(ORDER_KEY,JSON.stringify(orders));
+  localStorage.setItem(MENU_KEY, JSON.stringify(menu));
+  localStorage.setItem(ORDER_KEY, JSON.stringify(orders));
 }
-
 function peso(amount) {
- return "₱" + Number(amount).toFixed(2);
+  return "₱" + Number(amount || 0).toFixed(2);
 }
-
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  })[c]);
+}
+function safeId(value) {
+  return "'" + String(value).replace(/['\\]/g, "\\$&") + "'";
+}
+// ===================================
+// GOOGLE SHEETS API
+// ===================================
+async function apiGet(type) {
+  const response = await fetch(
+    SHEET_URL + "?type=" + encodeURIComponent(type)
+  );
+  if (!response.ok) {
+    throw new Error("Server connection failed");
+  }
+  const data = await response.json();
+  if (!Array.isArray(data)) {
+    throw new Error(data.message || "Invalid server response");
+  }
+  return data;
+}
+async function apiPost(data) {
+  const response = await fetch(SHEET_URL, {
+    method:"POST",
+    body:JSON.stringify(data)
+  });
+  const result = await response.json();
+  if (result.result !== "success" &&
+      result.result !== "updated" &&
+      result.result !== "deleted") {
+    throw new Error(result.message || "Request failed");
+  }
+  return result;
+}
+function setConnection(message, good) {
+  const el = document.getElementById("connectionStatus");
+  el.textContent = message;
+  el.style.background = good ? "#e8f4ed" : "#fff0d5";
+}
+// ===================================
+// LOAD MENU FROM SHEETS
+// ===================================
+async function syncMenu() {
+  try {
+    const remoteMenu = await apiGet("menu");
+    if (remoteMenu.length === 0) {
+      for (const item of defaultMenu) {
+        await apiPost({
+          action:"addFood",
+          ...item
+        });
+      }
+      menu = defaultMenu.map(x => ({...x}));
+    } else {
+      menu = remoteMenu.map(item => ({
+        id:String(item.id),
+        name:String(item.name),
+        price:Number(item.price),
+        canteen:String(item.canteen),
+        available:item.available === true,
+        emoji:item.emoji || "🍽️"
+      }));
+    }
+    saveData();
+    renderMenu();
+    setConnection("🟢 Connected to Google Sheets", true);
+  } catch(error) {
+    console.error(error);
+    setConnection("⚠️ Offline mode: showing saved menu.", false);
+  }
+}
+// ===================================
+// PAGE NAVIGATION
+// ===================================
 function showPage(page) {
- ["shop","cart","checkout","admin","success"].forEach(p => {
-   document.getElementById(p+"Page").classList.toggle("hidden",p!==page);
- });
-
- if(page==="shop") renderMenu();
- if(page==="cart") renderCart();
- if(page==="checkout") renderCheckout();
- if(page==="admin") renderAdmin();
-
- window.scrollTo(0,0);
+  ["shop","cart","checkout","admin","success"].forEach(p => {
+    document.getElementById(p+"Page")
+      .classList.toggle("hidden", p !== page);
+  });
+  if(page === "shop") renderMenu();
+  if(page === "cart") renderCart();
+  if(page === "checkout") renderCheckout();
+  if(page === "admin") renderAdmin();
+  window.scrollTo(0,0);
 }
-
+// ===================================
 // MENU
+// ===================================
 function setCanteen(name) {
- currentCanteen = name;
- renderMenu();
+  currentCanteen = name;
+  renderMenu();
 }
-
 function renderMenu() {
- let names = ["All",...new Set(menu.map(x=>x.canteen))];
-
- document.getElementById("canteenTabs").innerHTML =
- names.map(n=>`
-   <button class="${n===currentCanteen?'active':''}"
-   onclick="setCanteen(this.dataset.name)"
-   data-name="${n}">
-   ${n==="All"?"All Canteens":n}
-   </button>
- `).join("");
-
- let items = menu.filter(x =>
-   currentCanteen==="All" || x.canteen===currentCanteen
- );
-
- document.getElementById("menuGrid").innerHTML =
- items.map(x=>`
-  <div class="food">
-   <div class="emoji">${x.emoji||"🍽️"}</div>
-   <h3>${x.name}</h3>
-   <p>${x.canteen}</p>
-   <p class="price">${peso(x.price)}</p>
-   <p>${x.available?"Available":"Sold Out"}</p>
-   <button ${x.available?"":"disabled"}
-   onclick="addCart(${x.id})">
-   Add to Cart
-   </button>
-  </div>
- `).join("");
+  const names = ["All", ...new Set(menu.map(x => x.canteen))];
+  document.getElementById("canteenTabs").innerHTML =
+    names.map(n => `
+      <button class="${n === currentCanteen ? "active" : ""}"
+        onclick="setCanteen('${escapeHTML(n)}')">
+        ${n === "All" ? "All Canteens" : escapeHTML(n)}
+      </button>
+    `).join("");
+  const items = menu.filter(x =>
+    currentCanteen === "All" || x.canteen === currentCanteen
+  );
+  document.getElementById("menuGrid").innerHTML =
+    items.map(x => `
+      <div class="food">
+        <div class="emoji">${escapeHTML(x.emoji || "🍽️")}</div>
+        <h3>${escapeHTML(x.name)}</h3>
+        <p>${escapeHTML(x.canteen)}</p>
+        <p class="price">${peso(x.price)}</p>
+        <p>${x.available ? "🟢 Available" : "🔴 Sold Out"}</p>
+        <button ${x.available ? "" : "disabled"}
+          onclick="addCart(${safeId(x.id)})">
+          Add to Cart
+        </button>
+      </div>
+    `).join("");
 }
-
+// ===================================
 // CART
+// ===================================
 function addCart(id) {
- let item = menu.find(x=>x.id===id);
- if(!item || !item.available) return;
-
- let existing = cart.find(x=>x.id===id);
-
- if(existing) existing.qty++;
- else cart.push({id,qty:1});
-
- updateCount();
- alert("Added to cart!");
+  const item = menu.find(x => String(x.id) === String(id));
+  if(!item || !item.available) return;
+  const existing = cart.find(x => String(x.id) === String(id));
+  if(existing) existing.qty++;
+  else cart.push({id:String(id), qty:1});
+  updateCount();
+  alert("Added to cart!");
 }
-
 function updateCount() {
- document.getElementById("cartCount").innerText =
- cart.reduce((a,x)=>a+x.qty,0);
+  document.getElementById("cartCount").innerText =
+    cart.reduce((sum,x) => sum + x.qty, 0);
 }
-
 function renderCart() {
- let total = 0;
-
- document.getElementById("cartItems").innerHTML =
- cart.map(c=>{
-   let item = menu.find(x=>x.id===c.id);
-   if(!item) return "";
-
-   total += item.price*c.qty;
-
-   return `
-    <div class="item">
-     <div>
-      <b>${item.name}</b><br>
-      ${peso(item.price)} × ${c.qty}
-     </div>
-     <div>
-      <button onclick="changeQty(${item.id},-1)">−</button>
-      <button onclick="changeQty(${item.id},1)">+</button>
-      <button class="danger" onclick="removeCart(${item.id})">×</button>
-     </div>
-    </div>
-   `;
- }).join("");
-
- document.getElementById("cartTotal").innerText =
- "Total: "+peso(total);
+  let total = 0;
+  const html = cart.map(c => {
+    const item = menu.find(x => String(x.id) === String(c.id));
+    if(!item) return "";
+    total += item.price * c.qty;
+    return `
+      <div class="item">
+        <div>
+          <b>${escapeHTML(item.name)}</b><br>
+          ${peso(item.price)} × ${c.qty}
+        </div>
+        <div class="actions">
+          <button onclick="changeQty(${safeId(item.id)},-1)">−</button>
+          <button onclick="changeQty(${safeId(item.id)},1)">+</button>
+          <button class="danger" onclick="removeCart(${safeId(item.id)})">×</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+  document.getElementById("cartItems").innerHTML =
+    html || "<p>Wala pang laman ang cart mo.</p>";
+  document.getElementById("cartTotal").innerText =
+    "Total: " + peso(total);
 }
-
-function changeQty(id,amount) {
- let item = cart.find(x=>x.id===id);
- if(!item) return;
-
- item.qty += amount;
-
- if(item.qty<=0) removeCart(id);
-
- renderCart();
- updateCount();
+function changeQty(id, amount) {
+  const item = cart.find(x => String(x.id) === String(id));
+  if(!item) return;
+  item.qty += amount;
+  if(item.qty <= 0) {
+    cart = cart.filter(x => String(x.id) !== String(id));
+  }
+  renderCart();
+  updateCount();
 }
-
 function removeCart(id) {
- cart = cart.filter(x=>x.id!==id);
- renderCart();
- updateCount();
+  cart = cart.filter(x => String(x.id) !== String(id));
+  renderCart();
+  updateCount();
 }
-
+// ===================================
 // CHECKOUT
+// ===================================
 function renderCheckout() {
- let total = cart.reduce((sum,c)=>{
-   let item = menu.find(x=>x.id===c.id);
-   return sum+(item?item.price*c.qty:0);
- },0);
-
- document.getElementById("checkoutSummary").innerHTML =
- "<h3>Total: "+peso(total)+"</h3>";
+  if(cart.length === 0) {
+    document.getElementById("checkoutSummary").innerHTML =
+      "<p>Your cart is empty.</p>";
+    return;
+  }
+  let total = 0;
+  const summary = cart.map(c => {
+    const item = menu.find(x => String(x.id) === String(c.id));
+    if(!item) return "";
+    total += item.price * c.qty;
+    return `<p>${escapeHTML(item.name)} × ${c.qty}: ${peso(item.price*c.qty)}</p>`;
+  }).join("");
+  document.getElementById("checkoutSummary").innerHTML =
+    summary + "<h3>Total: " + peso(total) + "</h3>";
 }
-
-function placeOrder() {
- let name = document.getElementById("custName").value.trim();
- let phone = document.getElementById("custPhone").value.trim();
-
- if(!name || !phone || cart.length===0) {
-   alert("Pakilagay ang pangalan, number at order.");
-   return;
- }
-
- let items = cart.map(c=>{
-   let item = menu.find(x=>x.id===c.id);
-   return {
-     name:item.name,
-     canteen:item.canteen,
-     price:item.price,
-     qty:c.qty
-   };
- });
-
- let total = items.reduce((sum,x)=>sum+x.price*x.qty,0);
-
- let order = {
-   id:"ORD-"+Date.now(),
-   name:name,
-   phone:phone,
-   payment:document.getElementById("payment").value,
-   note:document.getElementById("custNote").value,
-   items:items,
-   total:total,
-   status:"Pending",
-   date:new Date().toLocaleString()
- };
-
- orders.unshift(order);
- saveData();
-
- // send order to Google Sheet
- fetch(SHEET_URL, {
-   method:"POST",
-   body: JSON.stringify(order)
- }).catch(err=>console.error("Sheet sync failed:",err));
-
- cart=[];
- updateCount();
-
- showPage("success");
+async function placeOrder() {
+  const name = document.getElementById("custName").value.trim();
+  const phone = document.getElementById("custPhone").value.trim();
+  if(!name || !phone || cart.length === 0) {
+    alert("Pakilagay ang pangalan, number at order.");
+    return;
+  }
+  const items = [];
+  for(const c of cart) {
+    const item = menu.find(x => String(x.id) === String(c.id));
+    if(!item || !item.available) {
+      alert("May item na hindi na available. I-check ang iyong cart.");
+      await syncMenu();
+      return;
+    }
+    items.push({
+      name:item.name,
+      canteen:item.canteen,
+      price:item.price,
+      qty:c.qty
+    });
+  }
+  const total = items.reduce(
+    (sum,x) => sum + x.price*x.qty, 0
+  );
+  const order = {
+    action:"createOrder",
+    id:"ORD-" + Date.now(),
+    name:name,
+    phone:phone,
+    payment:document.getElementById("payment").value,
+    note:document.getElementById("custNote").value.trim(),
+    items:items,
+    total:total,
+    status:"Pending",
+    date:new Date().toISOString()
+  };
+  const button = document.getElementById("submitOrderBtn");
+  button.disabled = true;
+  button.textContent = "Submitting...";
+  try {
+    await apiPost(order);
+    orders.unshift(order);
+    saveData();
+    cart = [];
+    updateCount();
+    document.getElementById("custName").value = "";
+    document.getElementById("custPhone").value = "";
+    document.getElementById("custNote").value = "";
+    document.getElementById("successOrderId").innerHTML =
+      "Order ID: <b>" + escapeHTML(order.id) + "</b>";
+    showPage("success");
+  } catch(error) {
+    alert("Hindi na-save ang order: " + error.message);
+  } finally {
+    button.disabled = false;
+    button.textContent = "SUBMIT ORDER";
+  }
 }
-
+// ===================================
 // ADMIN LOGIN
+// ===================================
 function loginAdmin() {
- if(document.getElementById("adminPin").value===ADMIN_PIN) {
-   isAdmin=true;
-   renderAdmin();
- } else {
-   alert("Wrong PIN!");
- }
+  const pin = document.getElementById("adminPin").value;
+  if(pin === ADMIN_PIN) {
+    isAdmin = true;
+    document.getElementById("adminPin").value = "";
+    renderAdmin();
+  } else {
+    alert("Wrong PIN!");
+  }
 }
-
 function logoutAdmin() {
- isAdmin=false;
- document.getElementById("adminPin").value="";
- renderAdmin();
+  isAdmin = false;
+  document.getElementById("adminPin").value = "";
+  renderAdmin();
 }
-
 function renderAdmin() {
- document.getElementById("adminLogin").classList.toggle("hidden",isAdmin);
- document.getElementById("adminDash").classList.toggle("hidden",!isAdmin);
-
- if(isAdmin) adminTab("orders");
+  document.getElementById("adminLogin")
+    .classList.toggle("hidden", isAdmin);
+  document.getElementById("adminDash")
+    .classList.toggle("hidden", !isAdmin);
+  if(isAdmin) adminTab("orders");
 }
-
 function adminTab(tab) {
- document.getElementById("ordersAdmin").classList.toggle("hidden",tab!=="orders");
- document.getElementById("manageAdmin").classList.toggle("hidden",tab!=="manage");
-
- if(tab==="orders") renderOrders();
- if(tab==="manage") renderManage();
+  document.getElementById("ordersAdmin")
+    .classList.toggle("hidden", tab !== "orders");
+  document.getElementById("manageAdmin")
+    .classList.toggle("hidden", tab !== "manage");
+  if(tab === "orders") renderOrders();
+  if(tab === "manage") renderManage();
 }
-
+// ===================================
 // ADMIN ORDERS
+// ===================================
 async function renderOrders() {
- let el = document.getElementById("ordersAdmin");
- el.innerHTML = "<p>Loading orders...</p>";
-
- try {
-   const res = await fetch(SHEET_URL);
-   const sheetOrders = await res.json();
-   orders = sheetOrders.reverse();
-   saveData();
- } catch(err) {
-   console.error("Failed to load orders from sheet, showing local copy:",err);
- }
-
- if(orders.length===0) {
-   el.innerHTML="<p>Wala pang orders.</p>";
-   return;
- }
-
- el.innerHTML = orders.map(o=>`
-  <div class="order">
-   <h3>${o.id}</h3>
-   <p><b>${o.name}</b></p>
-   <p>${o.phone}</p>
-   <p>Payment: ${o.payment}</p>
-   <p>Status: <span class="status">${o.status}</span></p>
-
-   ${o.items.map(i=>`
-    <p>${i.qty} × ${i.name} - ${peso(i.price*i.qty)}</p>
-   `).join("")}
-
-   <h3>${peso(o.total)}</h3>
-
-   ${o.status==="Pending"?
-   `<button onclick="setStatus('${o.id}','Confirmed')">Confirm Order</button>`:
-   `<button class="secondary" onclick="setStatus('${o.id}','Completed')">Completed</button>`}
-
-   <button class="danger" onclick="deleteOrder('${o.id}')">
-   Delete Order
-   </button>
-  </div>
- `).join("");
+  const el = document.getElementById("ordersAdmin");
+  el.innerHTML = "<p>Loading orders...</p>";
+  try {
+    orders = await apiGet("orders");
+    orders.reverse();
+    saveData();
+  } catch(error) {
+    el.innerHTML = `
+      <div class="notice">⚠️ Cannot load orders from Google Sheets.
+      ${escapeHTML(error.message)}</div>
+    `;
+    return;
+  }
+  if(orders.length === 0) {
+    el.innerHTML = "<p>Wala pang orders.</p>";
+    return;
+  }
+  el.innerHTML = orders.map(o => `
+    <div class="order">
+      <h3>${escapeHTML(o.id)}</h3>
+      <p><b>${escapeHTML(o.name)}</b></p>
+      <p>Phone: ${escapeHTML(o.phone)}</p>
+      <p>Payment: ${escapeHTML(o.payment)}</p>
+      <p>Note: ${escapeHTML(o.note || "None")}</p>
+      <p>Status: <span class="status">${escapeHTML(o.status)}</span></p>
+      ${(Array.isArray(o.items) ? o.items : []).map(i => `
+        <p>${Number(i.qty)} × ${escapeHTML(i.name)}
+        - ${peso(Number(i.price)*Number(i.qty))}</p>
+      `).join("")}
+      <h3>${peso(o.total)}</h3>
+      <p class="muted">${escapeHTML(o.date)}</p>
+      <div class="actions">
+        ${o.status === "Pending" ?
+          `<button onclick="setStatus(${safeId(o.id)},'Confirmed')">Confirm</button>` : ""}
+        ${o.status === "Confirmed" ?
+          `<button onclick="setStatus(${safeId(o.id)},'Preparing')">Preparing</button>` : ""}
+        ${o.status === "Preparing" ?
+          `<button onclick="setStatus(${safeId(o.id)},'Ready')">Ready</button>` : ""}
+        ${o.status === "Ready" ?
+          `<button onclick="setStatus(${safeId(o.id)},'Completed')">Completed</button>` : ""}
+        ${o.status === "Completed" ?
+          `<span class="status ok">Completed</span>` : ""}
+        <button class="danger" onclick="deleteOrder(${safeId(o.id)})">Delete</button>
+      </div>
+    </div>
+  `).join("");
 }
-
-function setStatus(id,status) {
- let order = orders.find(x=>x.id===id);
- if(order) {
-   order.status=status;
-   saveData();
-
-   fetch(SHEET_URL, {
-     method:"POST",
-     body: JSON.stringify({action:"updateStatus",id:id,status:status})
-   }).catch(err=>console.error("Sheet sync failed:",err));
-
-   renderOrders();
- }
+async function setStatus(id,status) {
+  try {
+    await apiPost({
+      action:"updateStatus",
+      id:id,
+      status:status
+    });
+    const order = orders.find(x => String(x.id) === String(id));
+    if(order) order.status = status;
+    saveData();
+    renderOrders();
+  } catch(error) {
+    alert("Status update failed: " + error.message);
+  }
 }
-
-function deleteOrder(id) {
- if(confirm("Delete this order permanently?")) {
-   orders=orders.filter(x=>x.id!==id);
-   saveData();
-
-   fetch(SHEET_URL, {
-     method:"POST",
-     body: JSON.stringify({action:"deleteOrder",id:id})
-   }).catch(err=>console.error("Sheet sync failed:",err));
-
-   renderOrders();
- }
+async function deleteOrder(id) {
+  if(!confirm("Delete this order permanently?")) return;
+  try {
+    await apiPost({
+      action:"deleteOrder",
+      id:id
+    });
+    orders = orders.filter(x => String(x.id) !== String(id));
+    saveData();
+    renderOrders();
+  } catch(error) {
+    alert("Delete failed: " + error.message);
+  }
 }
-
-// MANAGE MENU
+// ===================================
+// ADMIN MENU MANAGEMENT
+// ===================================
 function renderManage() {
- document.getElementById("manageAdmin").innerHTML = `
-  <h3>Add Food</h3>
-
-  <label>Food Name</label>
-  <input id="newName" placeholder="Food name">
-
-  <label>Price</label>
-  <input id="newPrice" type="number" placeholder="Price">
-
-  <label>Canteen</label>
-  <select id="newCanteen">
-   <option>Canteen 1</option>
-   <option>Canteen 2</option>
-  </select>
-
-  <button onclick="addFood()">Add Food</button>
-
-  <hr>
-
-  <h3>Current Menu</h3>
-
-  ${menu.map(x=>`
-   <div class="order">
-    <b>${x.name}</b> - ${peso(x.price)}
-    <p>${x.canteen} | ${x.available?"Available":"Sold Out"}</p>
-
-    <button onclick="editFood(${x.id})">Edit</button>
-    <button class="secondary" onclick="toggleFood(${x.id})">
-    ${x.available?"Sold Out":"Available"}
-    </button>
-    <button class="danger" onclick="deleteFood(${x.id})">Delete</button>
-   </div>
-  `).join("")}
- `;
+  document.getElementById("manageAdmin").innerHTML = `
+    <h3>➕ Add Food</h3>
+    <label>Food Name</label>
+    <input id="newName" placeholder="Food name">
+    <label>Price</label>
+    <input id="newPrice" type="number" min="0.01" step="0.01" placeholder="Price">
+    <label>Canteen</label>
+    <select id="newCanteen">
+      <option>Canteen 1</option>
+      <option>Canteen 2</option>
+    </select>
+    <button class="full" style="margin-top:12px" onclick="addFood()">Add Food</button>
+    <hr>
+    <h3>Current Menu (${menu.length})</h3>
+    ${menu.map(x => `
+      <div class="order">
+        <b>${escapeHTML(x.emoji)} ${escapeHTML(x.name)}</b>
+        <p>${peso(x.price)}</p>
+        <p>${escapeHTML(x.canteen)} |
+        ${x.available ? "🟢 Available" : "🔴 Sold Out"}</p>
+        <div class="actions">
+          <button onclick="editFood(${safeId(x.id)})">Edit</button>
+          <button class="secondary" onclick="toggleFood(${safeId(x.id)})">
+            ${x.available ? "Sold Out" : "Available"}
+          </button>
+          <button class="danger" onclick="deleteFood(${safeId(x.id)})">Delete</button>
+        </div>
+      </div>
+    `).join("")}
+  `;
 }
-
-function addFood() {
- let name = document.getElementById("newName").value.trim();
- let price = Number(document.getElementById("newPrice").value);
-
- if(!name || price<=0) {
-   alert("Enter valid food name and price.");
-   return;
- }
-
- menu.push({
-   id:Date.now(),
-   name:name,
-   price:price,
-   canteen:document.getElementById("newCanteen").value,
-   available:true,
-   emoji:"🍽️"
- });
-
- saveData();
- renderManage();
+async function addFood() {
+  const name = document.getElementById("newName").value.trim();
+  const price = Number(document.getElementById("newPrice").value);
+  const canteen = document.getElementById("newCanteen").value;
+  if(!name || !Number.isFinite(price) || price <= 0) {
+    alert("Enter valid food name and price.");
+    return;
+  }
+  const item = {
+    id:"FOOD-" + Date.now(),
+    name:name,
+    price:price,
+    canteen:canteen,
+    emoji:"🍽️"
+  };
+  try {
+    await apiPost({
+      action:"addFood",
+      ...item
+    });
+    menu.push({...item, available:true});
+    saveData();
+    renderManage();
+    renderMenu();
+    alert("Food successfully added!");
+  } catch(error) {
+    alert("Add failed: " + error.message);
+  }
 }
-
-function editFood(id) {
- let item = menu.find(x=>x.id===id);
- if(!item) return;
-
- let name = prompt("Food name:",item.name);
- if(name===null) return;
-
- let price = Number(prompt("Price:",item.price));
- if(!name.trim() || price<=0) return;
-
- item.name=name.trim();
- item.price=price;
-
- saveData();
- renderManage();
+async function editFood(id) {
+  const item = menu.find(x => String(x.id) === String(id));
+  if(!item) return;
+  const name = prompt("Food name:", item.name);
+  if(name === null) return;
+  const priceInput = prompt("Price:", item.price);
+  if(priceInput === null) return;
+  const price = Number(priceInput);
+  if(!name.trim() || !Number.isFinite(price) || price <= 0) {
+    alert("Invalid name or price.");
+    return;
+  }
+  try {
+    await apiPost({
+      action:"editFood",
+      id:item.id,
+      name:name.trim(),
+      price:price
+    });
+    item.name = name.trim();
+    item.price = price;
+    saveData();
+    renderManage();
+    renderMenu();
+    alert("Food updated!");
+  } catch(error) {
+    alert("Edit failed: " + error.message);
+  }
 }
-
-function toggleFood(id) {
- let item = menu.find(x=>x.id===id);
- item.available=!item.available;
- saveData();
- renderManage();
+async function toggleFood(id) {
+  const item = menu.find(x => String(x.id) === String(id));
+  if(!item) return;
+  try {
+    const result = await apiPost({
+      action:"toggleFood",
+      id:item.id
+    });
+    item.available = result.available;
+    saveData();
+    renderManage();
+    renderMenu();
+  } catch(error) {
+    alert("Update failed: " + error.message);
+  }
 }
-
-function deleteFood(id) {
- if(confirm("Delete this food?")) {
-   menu=menu.filter(x=>x.id!==id);
-   saveData();
-   renderManage();
- }
+async function deleteFood(id) {
+  if(!confirm("Delete this food?")) return;
+  try {
+    await apiPost({
+      action:"deleteFood",
+      id:id
+    });
+    menu = menu.filter(x => String(x.id) !== String(id));
+    cart = cart.filter(x => String(x.id) !== String(id));
+    saveData();
+    updateCount();
+    renderManage();
+    renderMenu();
+    alert("Food deleted!");
+  } catch(error) {
+    alert("Delete failed: " + error.message);
+  }
 }
-
+// ===================================
 // START
+// ===================================
 renderMenu();
 updateCount();
-
+syncMenu();
 </script>
 </body>
 </html>
