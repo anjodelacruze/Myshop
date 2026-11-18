@@ -204,7 +204,10 @@ label { display:block;margin:12px 0 5px;font-weight:bold; }
 <script>
 
 // ADMIN SETTINGS
-const ADMIN_PIN = "200308";
+const ADMIN_PIN = "1234";
+
+// Google Sheet connection
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbwnthW3OSjw08mo2hUVgb1569uPqzUU23dUREdmm_fO0LbO5c6NoQ0jpK2kLZQntOmr/exec";
 
 // STORAGE
 const MENU_KEY = "canteen_menu";
@@ -429,6 +432,12 @@ function placeOrder() {
  orders.unshift(order);
  saveData();
 
+ // send order to Google Sheet
+ fetch(SHEET_URL, {
+   method:"POST",
+   body: JSON.stringify(order)
+ }).catch(err=>console.error("Sheet sync failed:",err));
+
  cart=[];
  updateCount();
 
@@ -467,8 +476,18 @@ function adminTab(tab) {
 }
 
 // ADMIN ORDERS
-function renderOrders() {
+async function renderOrders() {
  let el = document.getElementById("ordersAdmin");
+ el.innerHTML = "<p>Loading orders...</p>";
+
+ try {
+   const res = await fetch(SHEET_URL);
+   const sheetOrders = await res.json();
+   orders = sheetOrders.reverse();
+   saveData();
+ } catch(err) {
+   console.error("Failed to load orders from sheet, showing local copy:",err);
+ }
 
  if(orders.length===0) {
    el.innerHTML="<p>Wala pang orders.</p>";
@@ -505,6 +524,12 @@ function setStatus(id,status) {
  if(order) {
    order.status=status;
    saveData();
+
+   fetch(SHEET_URL, {
+     method:"POST",
+     body: JSON.stringify({action:"updateStatus",id:id,status:status})
+   }).catch(err=>console.error("Sheet sync failed:",err));
+
    renderOrders();
  }
 }
@@ -513,6 +538,12 @@ function deleteOrder(id) {
  if(confirm("Delete this order permanently?")) {
    orders=orders.filter(x=>x.id!==id);
    saveData();
+
+   fetch(SHEET_URL, {
+     method:"POST",
+     body: JSON.stringify({action:"deleteOrder",id:id})
+   }).catch(err=>console.error("Sheet sync failed:",err));
+
    renderOrders();
  }
 }
