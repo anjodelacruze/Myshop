@@ -14,13 +14,16 @@ header{background:linear-gradient(120deg,#124c37,#23865d);color:white;padding:20
 .brand{font-size:22px;font-weight:bold}
 nav,.tabs,.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 button{border:0;border-radius:9px;padding:11px 14px;background:var(--g);color:white;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
 nav button{background:#ffffff25}
 nav button.active{background:white;color:var(--g)}
 main{max-width:1000px;margin:auto;padding:14px}
 .panel{background:white;border:1px solid #e3eae5;border-radius:14px;padding:16px;margin-bottom:15px}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .food{border:1px solid #ddd;border-radius:12px;padding:9px;overflow:hidden}
-.food img{width:100%;height:125px;object-fit:cover;border-radius:9px;background:var(--l)}
+.food-photo{width:100%;height:125px;border-radius:9px;background:var(--l);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.food-photo img{width:100%;height:100%;object-fit:cover}
+.food-emoji{font-size:48px}
 .food h3{font-size:14px;margin:8px 0 4px}
 .food p{font-size:12px;margin:5px 0}
 .price{color:var(--g);font-weight:bold;font-size:16px}
@@ -40,6 +43,7 @@ label{display:block;margin:12px 0 5px;font-weight:bold}
 .status{display:inline-block;padding:5px 10px;border-radius:20px;background:#fff0d5;font-size:12px}
 .status.ok{background:#dff3e5;color:green}
 .actions button{flex:1}
+.photo-preview{width:100%;max-height:160px;object-fit:cover;border-radius:9px;margin-top:8px}
 @media(min-width:650px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 </style>
 </head>
@@ -113,7 +117,7 @@ label{display:block;margin:12px 0 5px;font-weight:bold}
 
 <section id="successPage" class="hidden">
  <div class="panel">
-  <h2> Order Submitted!</h2>
+  <h2>Order Submitted!</h2>
   <p>Your order has been saved.</p>
   <div id="successOrderId"></div>
   <button class="full" onclick="showPage('shop')">Back to Menu</button>
@@ -130,42 +134,43 @@ const ORDER_KEY="canteen_orders";
 
 // MENU
 const defaultMenu=[
-["1","Chicken Adobo",55,"Canteen 1","🍗","01-chicken-adobo"],
-["2","Pork Menudo",50,"Canteen 1","🍲","02-pork-menudo"],
-["3","Tortang Talong",35,"Canteen 1","🍆","03-tortang-talong"],
-["4","Fried Chicken",60,"Canteen 2","🍗","04-fried-chicken"],
-["5","Pancit Bihon",30,"Canteen 2","🍜","05-pancit-bihon"],
-["6","Tapsilog",65,"Canteen 2","🍳","06-tapsilog"],
-["7","Adobong Baboy",65,"Canteen 1","🥘","07-adobong-baboy"],
-["8","Adobong Manok",60,"Canteen 1","🍗","08-adobong-manok"],
-["9","Menudo",55,"Canteen 1","🍲","09-menudo"],
-["10","Afritada",60,"Canteen 1","🍛","10-afritada"],
-["11","Caldereta",75,"Canteen 1","🍖","11-caldereta"],
-["12","Mechado",70,"Canteen 1","🥩","12-mechado"],
-["13","Bicol Express",65,"Canteen 2","🌶️","13-bicol-express"],
-["14","Sisig",70,"Canteen 2","🍳","14-sisig"],
-["15","Dinuguan",55,"Canteen 2","🍲","15-dinuguan"],
-["16","Pork Steak / Bistek Tagalog",60,"Canteen 2","🥩","16-pork-steak-bistek"],
-["17","Lechon Kawali",75,"Canteen 2","🥓","17-lechon-kawali"],
-["18","Tokwa't Baboy",50,"Canteen 2","🍢","18-tokwa-at-baboy"],
-["19","Lumpiang Shanghai",40,"Canteen 1","🥟","19-lumpiang-shanghai"],
-["20","Chicken Curry",65,"Canteen 1","🍛","20-chicken-curry"],
-["21","Tinola",55,"Canteen 2","🍲","21-tinola"],
-["22","Pork Binagoongan",60,"Canteen 2","🍲","22-pork-binagoongan"],
-["23","Igado",60,"Canteen 1","🍢","23-igado"],
-["24","Coke",20,"Canteen 1","🥤","24-coke"],
-["25","Royal",20,"Canteen 1","🥤","25-royal"],
-["26","Sprite",20,"Canteen 1","🥤","26-sprite"],
-["27","Saging",10,"Canteen 1","🍌","27-saging"]
+["1","Chicken Adobo",55,"Canteen 1","🍗"],
+["2","Pork Menudo",50,"Canteen 1","🍲"],
+["3","Tortang Talong",35,"Canteen 1","🍆"],
+["4","Fried Chicken",60,"Canteen 2","🍗"],
+["5","Pancit Bihon",30,"Canteen 2","🍜"],
+["6","Tapsilog",65,"Canteen 2","🍳"],
+["7","Adobong Baboy",65,"Canteen 1","🥘"],
+["8","Adobong Manok",60,"Canteen 1","🍗"],
+["9","Menudo",55,"Canteen 1","🍲"],
+["10","Afritada",60,"Canteen 1","🍛"],
+["11","Caldereta",75,"Canteen 1","🍖"],
+["12","Mechado",70,"Canteen 1","🥩"],
+["13","Bicol Express",65,"Canteen 2","🌶️"],
+["14","Sisig",70,"Canteen 2","🍳"],
+["15","Dinuguan",55,"Canteen 2","🍲"],
+["16","Pork Steak / Bistek Tagalog",60,"Canteen 2","🥩"],
+["17","Lechon Kawali",75,"Canteen 2","🥓"],
+["18","Tokwa't Baboy",50,"Canteen 2","🍢"],
+["19","Lumpiang Shanghai",40,"Canteen 1","🥟"],
+["20","Chicken Curry",65,"Canteen 1","🍛"],
+["21","Tinola",55,"Canteen 2","🍲"],
+["22","Pork Binagoongan",60,"Canteen 2","🍲"],
+["23","Igado",60,"Canteen 1","🍢"],
+["24","Coke",20,"Canteen 1","🥤"],
+["25","Royal",20,"Canteen 1","🥤"],
+["26","Sprite",20,"Canteen 1","🥤"],
+["27","Saging",10,"Canteen 1","🍌"]
 ].map(x=>({
  id:x[0],name:x[1],price:x[2],canteen:x[3],
- emoji:x[4],image:"images/"+x[5]+".jpg",available:true
+ emoji:x[4],image:"",available:true
 }));
 
 function readStorage(k,f){
  try{return JSON.parse(localStorage.getItem(k))||f}
  catch(e){return f}
 }
+
 let menu=readStorage(MENU_KEY,defaultMenu);
 let orders=readStorage(ORDER_KEY,[]);
 let cart=[],currentCanteen="All",isAdmin=false;
@@ -190,37 +195,90 @@ async function apiGet(type){
  if(!Array.isArray(d))throw Error(d.message||"Invalid response");
  return d;
 }
+
 async function apiPost(data){
  let r=await fetch(SHEET_URL,{
   method:"POST",
   body:JSON.stringify(data)
  });
  let d=await r.json();
- if(!["success","updated","deleted"].includes(d.result))
+
+ if(!["success","updated","deleted"].includes(d.result)){
   throw Error(d.message||"Request failed");
+ }
  return d;
 }
+
+// PHOTO CONVERTER
+// Kino-convert ang larawan sa JPEG para mas maliit ang upload.
+async function imageToDataURL(file){
+ if(!file || !file.type.startsWith("image/")){
+  throw Error("Pumili ng valid na image file.");
+ }
+
+ const dataURL=await new Promise((resolve,reject)=>{
+  const reader=new FileReader();
+  reader.onload=()=>resolve(reader.result);
+  reader.onerror=()=>reject(Error("Hindi mabasa ang image."));
+  reader.readAsDataURL(file);
+ });
+
+ const img=await new Promise((resolve,reject)=>{
+  const picture=new Image();
+  picture.onload=()=>resolve(picture);
+  picture.onerror=()=>reject(Error("Hindi mabuksan ang larawan. Subukan ang JPG o PNG."));
+  picture.src=dataURL;
+ });
+
+ const maxSide=1200;
+ const scale=Math.min(1,maxSide/Math.max(img.width,img.height));
+ const canvas=document.createElement("canvas");
+ canvas.width=Math.round(img.width*scale);
+ canvas.height=Math.round(img.height*scale);
+
+ const ctx=canvas.getContext("2d");
+ ctx.drawImage(img,0,0,canvas.width,canvas.height);
+
+ const compressed=canvas.toDataURL("image/jpeg",0.78);
+
+ if(compressed.length>5*1024*1024){
+  throw Error("Masyadong malaki ang larawan. Pumili ng mas maliit na photo.");
+ }
+ return compressed;
+}
+
+// SYNC MENU
 async function syncMenu(){
  try{
   let remote=await apiGet("menu");
+
   if(remote.length){
    menu=remote.map(x=>{
     let old=menu.find(y=>String(y.id)===String(x.id));
-    return {...old,...x,id:String(x.id),
+    let oldImage=old&&String(old.image||"").startsWith("http")?old.image:"";
+
+    return {
+     ...old,...x,
+     id:String(x.id),
      price:Number(x.price),
-     available:x.available===true,
-     image:x.image||(old&&old.image)||""};
+     available:x.available===true || x.available==="TRUE" || x.available===1,
+     image:x.image||oldImage||""
+    };
    });
   }else{
-   for(let x of defaultMenu)
+   for(let x of defaultMenu){
     await apiPost({action:"addFood",...x});
+   }
    menu=defaultMenu.map(x=>({...x}));
   }
+
   saveData();
   renderMenu();
-  document.getElementById("connectionStatus").textContent=" Connected to Google Sheets";
+  document.getElementById("connectionStatus").textContent=
+   "✅ Connected to Google Sheets";
  }catch(e){
-  document.getElementById("connectionStatus").textContent="⚠️ Offline mode: showing saved menu.";
+  document.getElementById("connectionStatus").textContent=
+   "⚠️ Offline mode: showing saved menu. "+e.message;
  }
 }
 
@@ -229,56 +287,83 @@ function showPage(p){
  ["shop","cart","checkout","admin","success"].forEach(x=>
   document.getElementById(x+"Page").classList.toggle("hidden",x!==p)
  );
+
  if(p==="shop")renderMenu();
  if(p==="cart")renderCart();
  if(p==="checkout")renderCheckout();
  if(p==="admin")renderAdmin();
+
  window.scrollTo(0,0);
 }
 
 // MENU DISPLAY
-function setCanteen(n){currentCanteen=n;renderMenu()}
+function setCanteen(n){
+ currentCanteen=n;
+ renderMenu();
+}
+
 function renderMenu(){
  let names=["All",...new Set(menu.map(x=>x.canteen))];
+
  document.getElementById("canteenTabs").innerHTML=names.map(n=>`
   <button class="${n===currentCanteen?"active":""}"
    onclick="setCanteen('${esc(n)}')">
    ${n==="All"?"All Canteens":esc(n)}
-  </button>`).join("");
+  </button>
+ `).join("");
 
- let items=menu.filter(x=>currentCanteen==="All"||x.canteen===currentCanteen);
+ let items=menu.filter(x=>
+  currentCanteen==="All"||x.canteen===currentCanteen
+ );
 
  document.getElementById("menuGrid").innerHTML=items.map(x=>`
   <div class="food">
-   <img src="${esc(x.image||"")}" alt="${esc(x.name)}"
-    onerror="this.style.display='none'">
+   <div class="food-photo">
+    ${x.image?`
+     <img src="${esc(x.image)}" alt="${esc(x.name)}"
+      onerror="this.style.display='none';this.nextElementSibling.classList.remove('hidden')">
+     <div class="food-emoji hidden">${esc(x.emoji||"🍽️")}</div>
+    `:`
+     <div class="food-emoji">${esc(x.emoji||"🍽️")}</div>
+    `}
+   </div>
    <h3>${esc(x.name)}</h3>
    <p>${esc(x.canteen)}</p>
    <p class="price">${peso(x.price)}</p>
-   <p>${x.available?" Available":" Sold Out"}</p>
-   <button ${x.available?"":"disabled"} onclick="addCart(${sid(x.id)})">Add to Cart</button>
-  </div>`).join("");
+   <p>${x.available?"✅ Available":"❌ Sold Out"}</p>
+   <button ${x.available?"":"disabled"}
+    onclick="addCart(${sid(x.id)})">Add to Cart</button>
+  </div>
+ `).join("");
 }
 
 // CART
 function addCart(id){
  let x=menu.find(y=>String(y.id)===String(id));
  if(!x||!x.available)return;
+
  let c=cart.find(y=>String(y.id)===String(id));
- if(c)c.qty++;else cart.push({id:String(id),qty:1});
+ if(c)c.qty++;
+ else cart.push({id:String(id),qty:1});
+
  updateCount();
  alert("Added to cart!");
 }
+
 function updateCount(){
  document.getElementById("cartCount").textContent=
  cart.reduce((s,x)=>s+x.qty,0);
 }
+
 function renderCart(){
  let total=0;
+
  let html=cart.map(c=>{
   let x=menu.find(y=>String(y.id)===String(c.id));
   if(!x)return "";
+
   total+=x.price*c.qty;
+
   return `<div class="item">
    <div><b>${esc(x.name)}</b><br>${peso(x.price)} × ${c.qty}</div>
    <div class="actions">
@@ -288,67 +373,114 @@ function renderCart(){
    </div>
   </div>`;
  }).join("");
- document.getElementById("cartItems").innerHTML=html||"<p>Wala pang laman ang cart mo.</p>";
+
+ document.getElementById("cartItems").innerHTML=
+  html||"<p>Wala pang laman ang cart mo.</p>";
+
  document.getElementById("cartTotal").textContent="Total: "+peso(total);
 }
+
 function changeQty(id,n){
  let c=cart.find(x=>String(x.id)===String(id));
  if(!c)return;
+
  c.qty+=n;
  if(c.qty<=0)removeCart(id);
  else renderCart();
+
  updateCount();
 }
+
 function removeCart(id){
  cart=cart.filter(x=>String(x.id)!==String(id));
- renderCart();updateCount();
+ renderCart();
+ updateCount();
 }
 
 // CHECKOUT
 function renderCheckout(){
  let total=0;
+
  let html=cart.map(c=>{
   let x=menu.find(y=>String(y.id)===String(c.id));
   if(!x)return "";
+
   total+=x.price*c.qty;
   return `<p>${esc(x.name)} × ${c.qty}: ${peso(x.price*c.qty)}</p>`;
  }).join("");
+
  document.getElementById("checkoutSummary").innerHTML=
- html+"<h3>Total: "+peso(total)+"</h3>";
+  html+"<h3>Total: "+peso(total)+"</h3>";
 }
+
 async function placeOrder(){
  let name=document.getElementById("custName").value.trim();
  let phone=document.getElementById("custPhone").value.trim();
+
  if(!name||!phone||!cart.length){
-  alert("Pakilagay ang pangalan, number at order.");return;
+  alert("Pakilagay ang pangalan, number at order.");
+  return;
  }
+
  let items=[];
+
  for(let c of cart){
   let x=menu.find(y=>String(y.id)===String(c.id));
-  if(!x||!x.available){alert("May item na hindi na available.");return}
-  items.push({name:x.name,canteen:x.canteen,price:x.price,qty:c.qty});
+
+  if(!x||!x.available){
+   alert("May item na hindi na available.");
+   return;
+  }
+
+  items.push({
+   name:x.name,
+   canteen:x.canteen,
+   price:x.price,
+   qty:c.qty
+  });
  }
+
  let total=items.reduce((s,x)=>s+x.price*x.qty,0);
+
  let o={
-  action:"createOrder",id:"ORD-"+Date.now(),
-  name,phone,
+  action:"createOrder",
+  id:"ORD-"+Date.now(),
+  name,
+  phone,
   payment:document.getElementById("payment").value,
   note:document.getElementById("custNote").value.trim(),
-  items,total,status:"Pending",date:new Date().toISOString()
+  items,
+  total,
+  status:"Pending",
+  date:new Date().toISOString()
  };
+
  let b=document.getElementById("submitOrderBtn");
- b.disabled=true;b.textContent="Submitting...";
+ b.disabled=true;
+ b.textContent="Submitting...";
+
  try{
   await apiPost(o);
-  orders.unshift(o);saveData();
-  cart=[];updateCount();
+  orders.unshift(o);
+  saveData();
+
+  cart=[];
+  updateCount();
+
   document.getElementById("custName").value="";
   document.getElementById("custPhone").value="";
   document.getElementById("custNote").value="";
-  document.getElementById("successOrderId").innerHTML="Order ID: <b>"+esc(o.id)+"</b>";
+
+  document.getElementById("successOrderId").innerHTML=
+   "Order ID: <b>"+esc(o.id)+"</b>";
+
   showPage("success");
- }catch(e){alert("Hindi na-save ang order: "+e.message)}
- finally{b.disabled=false;b.textContent="SUBMIT ORDER"}
+ }catch(e){
+  alert("Hindi na-save ang order: "+e.message);
+ }finally{
+  b.disabled=false;
+  b.textContent="SUBMIT ORDER";
+ }
 }
 
 // ADMIN
@@ -357,26 +489,49 @@ function loginAdmin(){
   isAdmin=true;
   document.getElementById("adminPin").value="";
   renderAdmin();
- }else alert("Wrong PIN!");
+ }else{
+  alert("Wrong PIN!");
+ }
 }
-function logoutAdmin(){isAdmin=false;renderAdmin()}
+
+function logoutAdmin(){
+ isAdmin=false;
+ renderAdmin();
+}
+
 function renderAdmin(){
  document.getElementById("adminLogin").classList.toggle("hidden",isAdmin);
  document.getElementById("adminDash").classList.toggle("hidden",!isAdmin);
+
  if(isAdmin)adminTab("orders");
 }
+
 function adminTab(t){
  document.getElementById("ordersAdmin").classList.toggle("hidden",t!=="orders");
  document.getElementById("manageAdmin").classList.toggle("hidden",t!=="manage");
+
  if(t==="orders")renderOrders();
  if(t==="manage")renderManage();
 }
+
+// ORDERS ADMIN
 async function renderOrders(){
  let el=document.getElementById("ordersAdmin");
  el.innerHTML="<p>Loading orders...</p>";
- try{orders=await apiGet("orders");saveData()}
- catch(e){el.innerHTML="<div class='notice'>Cannot load orders: "+esc(e.message)+"</div>";return}
- if(!orders.length){el.innerHTML="<p>Wala pang orders.</p>";return}
+
+ try{
+  orders=await apiGet("orders");
+  saveData();
+ }catch(e){
+  el.innerHTML="<div class='notice'>Cannot load orders: "+esc(e.message)+"</div>";
+  return;
+ }
+
+ if(!orders.length){
+  el.innerHTML="<p>Wala pang orders.</p>";
+  return;
+ }
+
  el.innerHTML=[...orders].reverse().map(o=>`
   <div class="order">
    <h3>${esc(o.id)}</h3>
@@ -385,11 +540,14 @@ async function renderOrders(){
    <p>Payment: ${esc(o.payment)}</p>
    <p>Note: ${esc(o.note||"None")}</p>
    <p>Status: <span class="status">${esc(o.status)}</span></p>
+
    ${(Array.isArray(o.items)?o.items:[]).map(i=>`
     <p>${Number(i.qty)} × ${esc(i.name)} - ${peso(i.price*i.qty)}</p>
    `).join("")}
+
    <h3>${peso(o.total)}</h3>
    <p class="muted">${esc(o.date)}</p>
+
    <div class="actions">
     ${o.status==="Pending"?`<button onclick="setStatus(${sid(o.id)},'Confirmed')">Confirm</button>`:""}
     ${o.status==="Confirmed"?`<button onclick="setStatus(${sid(o.id)},'Preparing')">Preparing</button>`:""}
@@ -397,106 +555,246 @@ async function renderOrders(){
     ${o.status==="Ready"?`<button onclick="setStatus(${sid(o.id)},'Completed')">Completed</button>`:""}
     <button class="danger" onclick="deleteOrder(${sid(o.id)})">Delete</button>
    </div>
-  </div>`).join("");
+  </div>
+ `).join("");
 }
+
 async function setStatus(id,status){
  try{
   await apiPost({action:"updateStatus",id,status});
   let o=orders.find(x=>String(x.id)===String(id));
   if(o)o.status=status;
-  saveData();renderOrders();
- }catch(e){alert(e.message)}
+
+  saveData();
+  renderOrders();
+ }catch(e){
+  alert(e.message);
+ }
 }
+
 async function deleteOrder(id){
  if(!confirm("Delete this order permanently?"))return;
+
  try{
   await apiPost({action:"deleteOrder",id});
   orders=orders.filter(x=>String(x.id)!==String(id));
-  saveData();renderOrders();
- }catch(e){alert(e.message)}
+  saveData();
+  renderOrders();
+ }catch(e){
+  alert(e.message);
+ }
 }
 
 // MENU MANAGEMENT
 function renderManage(){
  document.getElementById("manageAdmin").innerHTML=`
   <h3>➕ Add Food</h3>
-  <label>Food Name</label><input id="newName" placeholder="Food name">
-  <label>Price</label><input id="newPrice" type="number" min="0.01" placeholder="Price">
+
+  <label>Food Name</label>
+  <input id="newName" placeholder="Food name">
+
+  <label>Price</label>
+  <input id="newPrice" type="number" min="0.01" placeholder="Price">
+
   <label>Canteen</label>
-  <select id="newCanteen"><option>Canteen 1</option><option>Canteen 2</option></select>
-  <label>Photo (optional)</label><input id="newImage" type="file" accept="image/*">
-  <button class="full" onclick="addFood()">Add Food</button>
-  <hr><h3>Current Menu (${menu.length})</h3>
+  <select id="newCanteen">
+   <option>Canteen 1</option>
+   <option>Canteen 2</option>
+  </select>
+
+  <label>Photo (optional)</label>
+  <input id="newImage" type="file" accept="image/*">
+
+  <button id="addFoodBtn" class="full" onclick="addFood()">Add Food</button>
+
+  <hr>
+  <h3>Current Menu (${menu.length})</h3>
+
   ${menu.map(x=>`
    <div class="order">
-    ${x.image?`<img src="${esc(x.image)}" alt="${esc(x.name)}" style="width:100%;max-height:140px;object-fit:cover;border-radius:9px;margin-bottom:8px">`:""}
+    ${x.image?`
+     <img src="${esc(x.image)}" alt="${esc(x.name)}"
+      style="width:100%;max-height:140px;object-fit:cover;border-radius:9px;margin-bottom:8px"
+      onerror="this.style.display='none'">
+    `:""}
+
     <b>${esc(x.emoji)} ${esc(x.name)}</b>
     <p>${peso(x.price)}</p>
-    <p>${esc(x.canteen)} | ${x.available?"Available":" Sold Out"}</p>
-    <input type="file" accept="image/*" class="hidden" id="img_${esc(x.id)}" onchange="uploadImage(${sid(x.id)},this.files[0])">
+    <p>${esc(x.canteen)} | ${x.available?"Available":"Sold Out"}</p>
+
+    <input type="file" accept="image/*" class="hidden"
+     id="img_${esc(x.id)}"
+     onchange="uploadImage(${sid(x.id)},this.files[0])">
+
     <div class="actions">
      <button onclick="editFood(${sid(x.id)})">Edit</button>
-     <button class="secondary" onclick="document.getElementById('img_${esc(x.id)}').click()">${x.image?"Change Photo":"Add Photo"}</button>
-     <button class="secondary" onclick="toggleFood(${sid(x.id)})">${x.available?"Sold Out":"Available"}</button>
+     <button class="secondary"
+      onclick="document.getElementById('img_${esc(x.id)}').click()">
+      ${x.image?"Change Photo":"Add Photo"}
+     </button>
+     <button class="secondary" onclick="toggleFood(${sid(x.id)})">
+      ${x.available?"Sold Out":"Available"}
+     </button>
      <button class="danger" onclick="deleteFood(${sid(x.id)})">Delete</button>
     </div>
-   </div>`).join("")}`;
+   </div>
+  `).join("")}
+ `;
 }
+
+// ADD FOOD - SAVE TO GOOGLE SHEETS FIRST
 async function addFood(){
  let name=document.getElementById("newName").value.trim();
  let price=Number(document.getElementById("newPrice").value);
  let canteen=document.getElementById("newCanteen").value;
  let file=document.getElementById("newImage").files[0];
- if(!name||!Number.isFinite(price)||price<=0){alert("Enter valid food name and price.");return}
- let image="";
- if(file){
-  image=await new Promise(res=>{
-   let r=new FileReader();
-   r.onload=()=>res(r.result);
-   r.readAsDataURL(file);
-  });
+
+ if(!name||!Number.isFinite(price)||price<=0){
+  alert("Enter valid food name and price.");
+  return;
  }
- let x={id:"FOOD-"+Date.now(),name,price,canteen,emoji:"🍽️",available:true,image};
- menu.push(x);saveData();renderManage();renderMenu();
- alert("Food successfully added!");
- try{await apiPost({action:"addFood",...x})}catch(e){}
+
+ let btn=document.getElementById("addFoodBtn");
+ btn.disabled=true;
+ btn.textContent="Saving...";
+
+ try{
+  let image="";
+
+  if(file){
+   image=await imageToDataURL(file);
+  }
+
+  let x={
+   id:"FOOD-"+Date.now(),
+   name,
+   price,
+   canteen,
+   emoji:"🍽️",
+   available:true,
+   image
+  };
+
+  let result=await apiPost({action:"addFood",...x});
+
+  x.image=result.image||"";
+  menu.push(x);
+  saveData();
+
+  await syncMenu();
+  renderManage();
+  renderMenu();
+
+  alert("Food successfully added!");
+ }catch(e){
+  alert("Hindi naidagdag ang food: "+e.message);
+ }finally{
+  btn.disabled=false;
+  btn.textContent="Add Food";
+ }
 }
 
-function uploadImage(id,file){
+// UPLOAD PHOTO TO GOOGLE DRIVE
+async function uploadImage(id,file){
  if(!file)return;
- let reader=new FileReader();
- reader.onload=function(){
-  let x=menu.find(y=>String(y.id)===String(id));
-  if(!x)return;
-  x.image=reader.result;
-  saveData();renderManage();renderMenu();
- };
- reader.readAsDataURL(file);
+
+ let x=menu.find(y=>String(y.id)===String(id));
+ if(!x)return;
+
+ try{
+  alert("Ina-upload ang photo. Hintayin matapos.");
+
+  let image=await imageToDataURL(file);
+
+  let result=await apiPost({
+   action:"uploadImage",
+   id:id,
+   image:image
+  });
+
+  x.image=result.image||result.url||"";
+  saveData();
+
+  // Kunin ang pinakabagong image URL mula sa Google Sheets.
+  await syncMenu();
+
+  renderManage();
+  renderMenu();
+
+  alert("✅ Na-upload na ang photo!");
+ }catch(e){
+  alert("Hindi na-upload ang photo: "+e.message);
+ }
 }
+
+// EDIT FOOD
 async function editFood(id){
  let x=menu.find(y=>String(y.id)===String(id));
  if(!x)return;
+
  let name=prompt("Food name:",x.name);
  if(name===null)return;
+
  let price=Number(prompt("Price:",x.price));
- if(!name.trim()||!Number.isFinite(price)||price<=0){alert("Invalid name or price.");return}
- x.name=name.trim();x.price=price;
- saveData();renderManage();renderMenu();
- try{await apiPost({action:"editFood",id:x.id,name:x.name,price:x.price})}catch(e){}
+
+ if(!name.trim()||!Number.isFinite(price)||price<=0){
+  alert("Invalid name or price.");
+  return;
+ }
+
+ try{
+  await apiPost({
+   action:"editFood",
+   id:x.id,
+   name:name.trim(),
+   price:price
+  });
+
+  x.name=name.trim();
+  x.price=price;
+
+  saveData();
+  renderManage();
+  renderMenu();
+ }catch(e){
+  alert("Hindi na-update: "+e.message);
+ }
 }
+
+// TOGGLE AVAILABILITY
 async function toggleFood(id){
  let x=menu.find(y=>String(y.id)===String(id));
  if(!x)return;
- x.available=!x.available;
- saveData();renderManage();renderMenu();
- try{await apiPost({action:"toggleFood",id:x.id})}catch(e){}
+
+ try{
+  await apiPost({action:"toggleFood",id:x.id});
+
+  x.available=!x.available;
+  saveData();
+  renderManage();
+  renderMenu();
+ }catch(e){
+  alert("Hindi na-update ang availability: "+e.message);
+ }
 }
+
+// DELETE FOOD
 async function deleteFood(id){
  if(!confirm("Delete this food?"))return;
- menu=menu.filter(x=>String(x.id)!==String(id));
- cart=cart.filter(x=>String(x.id)!==String(id));
- saveData();updateCount();renderManage();renderMenu();
- try{await apiPost({action:"deleteFood",id})}catch(e){}
+
+ try{
+  await apiPost({action:"deleteFood",id});
+
+  menu=menu.filter(x=>String(x.id)!==String(id));
+  cart=cart.filter(x=>String(x.id)!==String(id));
+
+  saveData();
+  updateCount();
+  renderManage();
+  renderMenu();
+ }catch(e){
+  alert("Hindi na-delete ang food: "+e.message);
+ }
 }
 
 // START
