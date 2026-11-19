@@ -275,7 +275,7 @@ async function syncMenu(){
   saveData();
   renderMenu();
   document.getElementById("connectionStatus").textContent=
-   "✅ Connected to Google Sheets";
+   " Connected to Google Sheets";
  }catch(e){
   document.getElementById("connectionStatus").textContent=
    "⚠️ Offline mode: showing saved menu. "+e.message;
@@ -330,7 +330,7 @@ function renderMenu(){
    <h3>${esc(x.name)}</h3>
    <p>${esc(x.canteen)}</p>
    <p class="price">${peso(x.price)}</p>
-   <p>${x.available?"✅ Available":"❌ Sold Out"}</p>
+   <p>${x.available?" Available":" Sold Out"}</p>
    <button ${x.available?"":"disabled"}
     onclick="addCart(${sid(x.id)})">Add to Cart</button>
   </div>
