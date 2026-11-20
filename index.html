@@ -1,101 +1,335 @@
+
 <!DOCTYPE html>
 <html lang="tl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#176b4a">
-<title>Canteen Order Hub </title>
+<title>Canteen Order Hub Mplace</title>
 
 <style>
-:root{--g:#176b4a;--l:#e8f4ed;--bg:#f5f8f5}
+:root{
+ --g:#176b4a;
+ --gd:#124c37;
+ --l:#e8f4ed;
+ --bg:#f5f8f5;
+ --white:#fff;
+ --text:#18231f;
+ --muted:#68756e;
+ --border:#e3eae5;
+ --red:#c03939;
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:#18231f;font:15px Arial}
-header{background:linear-gradient(120deg,#124c37,#23865d);color:white;padding:20px}
-.brand{font-size:22px;font-weight:bold}
-nav,.tabs,.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-button{border:0;border-radius:9px;padding:11px 14px;background:var(--g);color:white;font-weight:bold;cursor:pointer}
-button:disabled{opacity:.5;cursor:not-allowed}
-nav button{background:#ffffff25}
-nav button.active{background:white;color:var(--g)}
-main{max-width:1000px;margin:auto;padding:14px}
-.panel{background:white;border:1px solid #e3eae5;border-radius:14px;padding:16px;margin-bottom:15px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.food{border:1px solid #ddd;border-radius:12px;padding:9px;overflow:hidden}
-.food-photo{width:100%;height:125px;border-radius:9px;background:var(--l);display:flex;align-items:center;justify-content:center;overflow:hidden}
-.food-photo img{width:100%;height:100%;object-fit:cover}
-.food-emoji{font-size:48px}
-.food h3{font-size:14px;margin:8px 0 4px}
-.food p{font-size:12px;margin:5px 0}
-.price{color:var(--g);font-weight:bold;font-size:16px}
-.food button{width:100%;padding:9px}
-input,select{width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;background:white}
+html{scroll-behavior:smooth}
+body{
+ margin:0;background:var(--bg);color:var(--text);
+ font:15px Arial,sans-serif;
+}
+button,input,select{font:inherit}
+button{
+ border:0;border-radius:9px;padding:11px 14px;
+ background:var(--g);color:white;font-weight:bold;
+ cursor:pointer;transition:.2s;
+}
+button:hover{filter:brightness(1.08);transform:translateY(-1px)}
+button:disabled{opacity:.5;cursor:not-allowed;transform:none}
+input,select{
+ width:100%;padding:12px;border:1px solid #ccc;
+ border-radius:8px;font-size:16px;background:white;
+}
 label{display:block;margin:12px 0 5px;font-weight:bold}
-.hidden{display:none!important}
+header{
+ background:linear-gradient(120deg,var(--gd),#23865d);
+ color:white;padding:15px 18px;
+ position:sticky;top:0;z-index:50;
+ box-shadow:0 3px 15px #0002;
+}
+.header-inner{
+ max-width:1100px;margin:auto;
+ display:flex;align-items:center;gap:13px;
+}
+.brand-area{flex:1;min-width:0}
+.brand{font-size:21px;font-weight:bold}
+.brand-sub{font-size:12px;opacity:.85;margin-top:5px}
+.header-actions{display:flex;gap:8px}
+.header-actions button{background:#ffffff20}
+.menu-toggle{
+ width:43px;height:43px;padding:0;
+ display:flex;align-items:center;justify-content:center;
+ flex-direction:column;gap:5px;background:#ffffff20;
+}
+.menu-toggle span{
+ width:21px;height:2px;background:white;
+ border-radius:5px;transition:.25s;
+}
+.menu-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.menu-toggle.open span:nth-child(2){opacity:0}
+.menu-toggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+nav{
+ display:none;position:absolute;left:12px;top:70px;
+ width:210px;background:white;color:var(--text);
+ padding:10px;border-radius:12px;
+ box-shadow:0 8px 30px #0002;
+}
+nav.show{display:block;animation:slideDown .2s ease}
+nav button{
+ display:block;width:100%;text-align:left;
+ background:white;color:var(--text);margin:3px 0;
+}
+nav button:hover{background:var(--l);color:var(--g)}
+main{max-width:1100px;margin:auto;padding:16px}
+.panel{
+ background:white;border:1px solid var(--border);
+ border-radius:14px;padding:17px;margin-bottom:16px;
+ box-shadow:0 3px 12px #00000008;
+}
+h2{font-size:21px;margin:0 0 15px}
+h3{margin:8px 0}
+.muted{color:var(--muted);font-size:12px}
+.notice{
+ padding:12px;border-radius:9px;
+ background:var(--l);margin:10px 0;
+}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 .tabs button{background:var(--l);color:var(--g)}
 .tabs button.active{background:var(--g);color:white}
-.item{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 0;border-bottom:1px solid #ddd}
-.order{border:1px solid #ddd;border-radius:10px;padding:13px;margin-top:12px;overflow-wrap:anywhere}
-.full{width:100%;margin-top:8px}
+.grid{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:12px;
+}
+.food{
+ background:white;border:1px solid var(--border);
+ border-radius:13px;padding:10px;overflow:hidden;
+ transition:transform .25s,box-shadow .25s;
+ animation:fadeUp .4s ease both;
+}
+.food:hover{
+ transform:translateY(-4px);
+ box-shadow:0 8px 20px #00000012;
+}
+.food-photo{
+ width:100%;height:135px;border-radius:9px;
+ background:linear-gradient(135deg,#e8f4ed,#dcece2);
+ display:flex;align-items:center;justify-content:center;
+ overflow:hidden;
+}
+.food-photo img{width:100%;height:100%;object-fit:cover}
+.photo-placeholder{
+ width:42px;height:42px;border:2px solid #9abbaa;
+ border-radius:10px;position:relative;opacity:.8;
+}
+.photo-placeholder:before{
+ content:"";position:absolute;width:9px;height:9px;
+ border-radius:50%;background:#9abbaa;top:7px;left:7px;
+}
+.photo-placeholder:after{
+ content:"";position:absolute;left:5px;right:5px;bottom:5px;
+ height:17px;background:#9abbaa;
+ clip-path:polygon(0 100%,35% 20%,55% 65%,75% 35%,100% 100%);
+}
+.food h3{font-size:14px;margin:9px 0 5px}
+.food p{font-size:12px;margin:5px 0}
+.price{color:var(--g);font-weight:bold;font-size:16px}
+.food button{width:100%;padding:9px;margin-top:7px}
+.sold{color:var(--red);font-weight:bold}
+.available{color:var(--g);font-weight:bold}
+.hidden{display:none!important}
+.full{width:100%;margin-top:9px}
 .secondary{background:var(--l);color:var(--g)}
-.danger{background:#ffeaea;color:#b93838}
-.notice{padding:12px;border-radius:9px;background:var(--l);margin:10px 0}
-.muted{color:#68756e;font-size:12px}
-.status{display:inline-block;padding:5px 10px;border-radius:20px;background:#fff0d5;font-size:12px}
+.danger{background:#ffeaea;color:var(--red)}
+.item{
+ display:flex;justify-content:space-between;align-items:center;
+ gap:10px;padding:12px 0;border-bottom:1px solid var(--border);
+}
+.item-info{flex:1;min-width:0}
+.item-actions{display:flex;align-items:center;gap:5px}
+.item-actions button{padding:8px 11px}
+.cart-total{
+ display:flex;justify-content:space-between;
+ font-size:19px;font-weight:bold;margin:16px 0;
+ color:var(--g);
+}
+.order{
+ border:1px solid var(--border);border-radius:10px;
+ padding:13px;margin-top:12px;overflow-wrap:anywhere;
+}
+.status{
+ display:inline-block;padding:5px 10px;
+ border-radius:20px;background:#fff0d5;font-size:12px;
+}
 .status.ok{background:#dff3e5;color:green}
+.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
 .actions button{flex:1}
-.photo-preview{width:100%;max-height:160px;object-fit:cover;border-radius:9px;margin-top:8px}
-@media(min-width:650px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.photo-preview{
+ width:100%;max-height:160px;object-fit:cover;
+ border-radius:9px;margin-top:8px;
+}
+.section-heading{
+ display:flex;justify-content:space-between;
+ align-items:center;gap:10px;flex-wrap:wrap;
+}
+.cart-home{border:2px solid #d5e8dc}
+.cart-empty{text-align:center;padding:20px;color:var(--muted)}
+.cart-empty-line{
+ width:50px;height:40px;border:2px solid #b4cbbb;
+ border-radius:8px;margin:0 auto 12px;position:relative;
+}
+.cart-empty-line:after{
+ content:"";position:absolute;left:9px;right:9px;top:11px;
+ border-top:2px solid #b4cbbb;
+}
+footer{
+ text-align:center;padding:25px;color:var(--muted);
+ font-size:12px;
+}
+@keyframes fadeUp{
+ from{opacity:0;transform:translateY(12px)}
+ to{opacity:1;transform:translateY(0)}
+}
+@keyframes slideDown{
+ from{opacity:0;transform:translateY(-8px)}
+ to{opacity:1;transform:translateY(0)}
+}
+@keyframes pop{
+ 0%{transform:scale(.96)}
+ 100%{transform:scale(1)}
+}
+@media(min-width:650px){
+ .grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+ main{padding:22px}
+ .food-photo{height:155px}
+}
+@media(max-width:430px){
+ .brand{font-size:17px}
+ .brand-sub{font-size:11px}
+ .header-actions button{padding:9px}
+ main{padding:11px}
+ .panel{padding:13px}
+ .item{align-items:flex-start}
+ .item-actions button{padding:8px}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{
+  animation-duration:.01ms!important;
+  transition-duration:.01ms!important;
+  scroll-behavior:auto!important;
+ }
+}
 </style>
 </head>
 
 <body>
+
 <header>
- <div class="brand">🍽️ Canteen Order Hub Mplace</div>
- <p>• Order Online • Canteen Menu</p>
- <nav>
-  <button onclick="showPage('shop')">Menu</button>
-  <button onclick="showPage('cart')">🛒 Cart (<span id="cartCount">0</span>)</button>
-  <button onclick="showPage('admin')">Admin</button>
+ <div class="header-inner">
+  <button class="menu-toggle" id="menuToggle"
+   onclick="toggleNavigation()" aria-label="Open navigation">
+   <span></span><span></span><span></span>
+  </button>
+
+  <div class="brand-area">
+   <div class="brand">Canteen Order Hub</div>
+   <div class="brand-sub">Mplace · Online Food Ordering</div>
+  </div>
+
+  <div class="header-actions">
+   <button onclick="showPage('shop')">Home</button>
+   <button onclick="showPage('cart')">
+    Cart (<span id="cartCount">0</span>)
+   </button>
+  </div>
+ </div>
+
+ <nav id="mainNavigation">
+  <button onclick="showPage('shop');closeNavigation()">Home</button>
+  <button onclick="showPage('cart');closeNavigation()">My Cart</button>
+  <button onclick="showPage('admin');closeNavigation()">Admin Login</button>
  </nav>
 </header>
 
 <main>
+
+<!-- HOME PAGE -->
 <section id="shopPage">
  <div class="panel">
-  <h2>Today's Menu</h2>
+  <div class="section-heading">
+   <h2>Today's Menu</h2>
+   <span class="muted">Choose your favorite food</span>
+  </div>
+
   <div id="connectionStatus" class="notice">Connecting...</div>
   <div id="canteenTabs" class="tabs"></div>
   <div id="menuGrid" class="grid"></div>
  </div>
-</section>
 
-<section id="cartPage" class="hidden">
- <div class="panel">
-  <h2>🛒 My Cart</h2>
-  <div id="cartItems"></div>
-  <h3 id="cartTotal">Total: ₱0.00</h3>
-  <button class="full" onclick="showPage('checkout')">Checkout</button>
-  <button class="secondary full" onclick="showPage('shop')">Continue Shopping</button>
+ <!-- CART SA BABA NG HOMEPAGE -->
+ <div class="panel cart-home" id="homeCart">
+  <div class="section-heading">
+   <h2>My Order</h2>
+   <span class="muted">Your selected items</span>
+  </div>
+  <div id="homeCartItems"></div>
+  <div class="cart-total">
+   <span>Total</span>
+   <span id="homeCartTotal">₱0.00</span>
+  </div>
+  <button class="full" onclick="showPage('checkout')">
+   Proceed to Checkout
+  </button>
+  <button class="secondary full" onclick="showPage('cart')">
+   View Full Cart
+  </button>
  </div>
 </section>
 
+<!-- CART PAGE -->
+<section id="cartPage" class="hidden">
+ <div class="panel">
+  <h2>My Cart</h2>
+  <div id="cartItems"></div>
+  <div class="cart-total">
+   <span>Total</span><span id="cartTotal">₱0.00</span>
+  </div>
+  <button class="full" onclick="showPage('checkout')">Checkout</button>
+  <button class="secondary full" onclick="showPage('shop')">
+   Continue Shopping
+  </button>
+ </div>
+</section>
+
+<!-- CHECKOUT PAGE -->
 <section id="checkoutPage" class="hidden">
  <div class="panel">
   <h2>Customer Information</h2>
+
   <label>Full Name</label>
-  <input id="custName" placeholder="Your name">
+  <input id="custName" placeholder="Enter your full name">
+
   <label>Cellphone Number</label>
   <input id="custPhone" type="tel" placeholder="09XXXXXXXXX">
+
   <label>Payment Method</label>
-  <select id="payment"><option>Cash</option><option>GCash</option></select>
-  <label>Note</label>
-  <input id="custNote" placeholder="Optional">
-  <div id="checkoutSummary"></div>
-  <button id="submitOrderBtn" class="full" onclick="placeOrder()">SUBMIT ORDER</button>
-  <button class="secondary full" onclick="showPage('cart')">Back</button>
+  <select id="payment">
+   <option>Cash</option>
+   <option>GCash</option>
+  </select>
+
+  <label>Note (Optional)</label>
+  <input id="custNote" placeholder="Additional instructions">
+
+  <h3>Order Summary</h3>
+  <div id="checkoutSummary" class="notice"></div>
+
+  <button id="submitOrderBtn" class="full" onclick="placeOrder()">
+   SUBMIT ORDER
+  </button>
+  <button class="secondary full" onclick="showPage('cart')">
+   Back to Cart
+  </button>
  </div>
 </section>
 
+<!-- ADMIN PAGE -->
 <section id="adminPage" class="hidden">
  <div id="adminLogin" class="panel">
   <h2>Admin Login</h2>
@@ -103,67 +337,83 @@ label{display:block;margin:12px 0 5px;font-weight:bold}
   <input type="password" id="adminPin" placeholder="Enter PIN">
   <button class="full" onclick="loginAdmin()">Login</button>
  </div>
+
  <div id="adminDash" class="panel hidden">
   <h2>Admin Dashboard</h2>
+
   <div class="tabs">
-   <button onclick="adminTab('orders')">📦 Orders</button>
-   <button onclick="adminTab('manage')">🍽️ Manage Menu</button>
+   <button onclick="adminTab('orders')">Orders</button>
+   <button onclick="adminTab('manage')">Manage Menu</button>
   </div>
+
   <div id="ordersAdmin"></div>
   <div id="manageAdmin" class="hidden"></div>
-  <button class="secondary full" onclick="logoutAdmin()">Logout</button>
+
+  <button class="secondary full" onclick="logoutAdmin()">
+   Logout
+  </button>
  </div>
 </section>
 
+<!-- SUCCESS PAGE -->
 <section id="successPage" class="hidden">
  <div class="panel">
-  <h2>Order Submitted!</h2>
+  <h2>Order Submitted Successfully</h2>
   <p>Your order has been saved.</p>
-  <div id="successOrderId"></div>
+  <div class="notice" id="successOrderId"></div>
   <button class="full" onclick="showPage('shop')">Back to Menu</button>
  </div>
 </section>
+
 </main>
 
+<footer>
+ Canteen Order Hub Mplace<br>
+ Online Food Ordering System
+</footer>
+
 <script>
-// SETTINGS
+
+// SETTINGS - HUWAG BAGUHIN ANG EXISTING CONNECTION
 const ADMIN_PIN="0966";
-const SHEET_URL="https://script.google.com/macros/s/AKfycbwiZx_ZiEp9gJycNofrj-mypxlXgQt4NhrgqLDYWPAIwqPVuC2KovYxeKGyfwjIZiNjEQ/exec"
+
+const SHEET_URL="https://script.google.com/macros/s/AKfycbwiZx_ZiEp9gJycNofrj-mypxlXgQt4NhrgqLDYWPAIwqPVuC2KovYxeKGyfwjIZiNjEQ/exec";
+
 const MENU_KEY="canteen_menu";
 const ORDER_KEY="canteen_orders";
 
-// MENU
+// DEFAULT MENU
 const defaultMenu=[
-["1","Chicken Adobo",55,"Canteen 1","🍗"],
-["2","Pork Menudo",50,"Canteen 1","🍲"],
-["3","Tortang Talong",35,"Canteen 1","🍆"],
-["4","Fried Chicken",60,"Canteen 2","🍗"],
-["5","Pancit Bihon",30,"Canteen 2","🍜"],
-["6","Tapsilog",65,"Canteen 2","🍳"],
-["7","Adobong Baboy",65,"Canteen 1","🥘"],
-["8","Adobong Manok",60,"Canteen 1","🍗"],
-["9","Menudo",55,"Canteen 1","🍲"],
-["10","Afritada",60,"Canteen 1","🍛"],
-["11","Caldereta",75,"Canteen 1","🍖"],
-["12","Mechado",70,"Canteen 1","🥩"],
-["13","Bicol Express",65,"Canteen 2","🌶️"],
-["14","Sisig",70,"Canteen 2","🍳"],
-["15","Dinuguan",55,"Canteen 2","🍲"],
-["16","Pork Steak / Bistek Tagalog",60,"Canteen 2","🥩"],
-["17","Lechon Kawali",75,"Canteen 2","🥓"],
-["18","Tokwa't Baboy",50,"Canteen 2","🍢"],
-["19","Lumpiang Shanghai",40,"Canteen 1","🥟"],
-["20","Chicken Curry",65,"Canteen 1","🍛"],
-["21","Tinola",55,"Canteen 2","🍲"],
-["22","Pork Binagoongan",60,"Canteen 2","🍲"],
-["23","Igado",60,"Canteen 1","🍢"],
-["24","Coke",20,"Canteen 1","🥤"],
-["25","Royal",20,"Canteen 1","🥤"],
-["26","Sprite",20,"Canteen 1","🥤"],
-["27","Saging",10,"Canteen 1","🍌"]
+["1","Chicken Adobo",55,"Canteen 1",""],
+["2","Pork Menudo",50,"Canteen 1",""],
+["3","Tortang Talong",35,"Canteen 1",""],
+["4","Fried Chicken",60,"Canteen 2",""],
+["5","Pancit Bihon",30,"Canteen 2",""],
+["6","Tapsilog",65,"Canteen 2",""],
+["7","Adobong Baboy",65,"Canteen 1",""],
+["8","Adobong Manok",60,"Canteen 1",""],
+["9","Menudo",55,"Canteen 1",""],
+["10","Afritada",60,"Canteen 1",""],
+["11","Caldereta",75,"Canteen 1",""],
+["12","Mechado",70,"Canteen 1",""],
+["13","Bicol Express",65,"Canteen 2",""],
+["14","Sisig",70,"Canteen 2",""],
+["15","Dinuguan",55,"Canteen 2",""],
+["16","Pork Steak / Bistek Tagalog",60,"Canteen 2",""],
+["17","Lechon Kawali",75,"Canteen 2",""],
+["18","Tokwa't Baboy",50,"Canteen 2",""],
+["19","Lumpiang Shanghai",40,"Canteen 1",""],
+["20","Chicken Curry",65,"Canteen 1",""],
+["21","Tinola",55,"Canteen 2",""],
+["22","Pork Binagoongan",60,"Canteen 2",""],
+["23","Igado",60,"Canteen 1",""],
+["24","Coke",20,"Canteen 1",""],
+["25","Royal",20,"Canteen 1",""],
+["26","Sprite",20,"Canteen 1",""],
+["27","Saging",10,"Canteen 1",""]
 ].map(x=>({
  id:x[0],name:x[1],price:x[2],canteen:x[3],
- emoji:x[4],image:"",available:true
+ emoji:"",image:"",available:true
 }));
 
 function readStorage(k,f){
@@ -173,26 +423,80 @@ function readStorage(k,f){
 
 let menu=readStorage(MENU_KEY,defaultMenu);
 let orders=readStorage(ORDER_KEY,[]);
-let cart=[],currentCanteen="All",isAdmin=false;
+let cart=[];
+let currentCanteen="All";
+let isAdmin=false;
 
 function saveData(){
  localStorage.setItem(MENU_KEY,JSON.stringify(menu));
  localStorage.setItem(ORDER_KEY,JSON.stringify(orders));
 }
-function peso(n){return "₱"+Number(n||0).toFixed(2)}
+
+function peso(n){
+ return "₱"+Number(n||0).toFixed(2);
+}
+
 function esc(v){
  return String(v??"").replace(/[&<>"']/g,c=>({
- "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  "&":"&amp;","<":"&lt;",">":"&gt;",
+  '"':"&quot;","'":"&#39;"
  })[c]);
 }
-function sid(v){return "'"+String(v).replace(/['\\]/g,"\\$&")+"'"}
+
+function sid(v){
+ return "'"+String(v).replace(/['\\]/g,"\\$&")+"'";
+}
+
+// NAVIGATION
+function toggleNavigation(){
+ document.getElementById("mainNavigation").classList.toggle("show");
+ document.getElementById("menuToggle").classList.toggle("open");
+}
+
+function closeNavigation(){
+ document.getElementById("mainNavigation").classList.remove("show");
+ document.getElementById("menuToggle").classList.remove("open");
+}
+
+document.addEventListener("click",function(e){
+ const nav=document.getElementById("mainNavigation");
+ const toggle=document.getElementById("menuToggle");
+
+ if(!nav.contains(e.target)&&!toggle.contains(e.target)){
+  closeNavigation();
+ }
+});
+
+function showPage(p){
+ ["shop","cart","checkout","admin","success"].forEach(x=>{
+  document.getElementById(x+"Page").classList.toggle("hidden",x!==p);
+ });
+
+ closeNavigation();
+
+ if(p==="shop"){
+  renderMenu();
+  renderHomeCart();
+ }
+ if(p==="cart")renderCart();
+ if(p==="checkout")renderCheckout();
+ if(p==="admin")renderAdmin();
+
+ window.scrollTo({top:0,behavior:"smooth"});
+}
 
 // GOOGLE SHEETS
 async function apiGet(type){
  let r=await fetch(SHEET_URL+"?type="+encodeURIComponent(type));
+
  if(!r.ok)throw Error("Server connection failed");
+
  let d=await r.json();
- if(!Array.isArray(d))throw Error(d.message||"Invalid response");
+
+ if(!Array.isArray(d)){
+  throw Error(d.message||"Invalid response");
+ }
+
  return d;
 }
 
@@ -201,37 +505,39 @@ async function apiPost(data){
   method:"POST",
   body:JSON.stringify(data)
  });
+
  let d=await r.json();
 
  if(!["success","updated","deleted"].includes(d.result)){
   throw Error(d.message||"Request failed");
  }
+
  return d;
 }
 
 // PHOTO CONVERTER
-// Kino-convert ang larawan sa JPEG para mas maliit ang upload.
 async function imageToDataURL(file){
- if(!file || !file.type.startsWith("image/")){
-  throw Error("Pumili ng valid na image file.");
+ if(!file||!file.type.startsWith("image/")){
+  throw Error("Please select a valid image file.");
  }
 
  const dataURL=await new Promise((resolve,reject)=>{
   const reader=new FileReader();
   reader.onload=()=>resolve(reader.result);
-  reader.onerror=()=>reject(Error("Hindi mabasa ang image."));
+  reader.onerror=()=>reject(Error("Cannot read image."));
   reader.readAsDataURL(file);
  });
 
  const img=await new Promise((resolve,reject)=>{
   const picture=new Image();
   picture.onload=()=>resolve(picture);
-  picture.onerror=()=>reject(Error("Hindi mabuksan ang larawan. Subukan ang JPG o PNG."));
+  picture.onerror=()=>reject(Error("Cannot open image."));
   picture.src=dataURL;
  });
 
  const maxSide=1200;
  const scale=Math.min(1,maxSide/Math.max(img.width,img.height));
+
  const canvas=document.createElement("canvas");
  canvas.width=Math.round(img.width*scale);
  canvas.height=Math.round(img.height*scale);
@@ -242,8 +548,9 @@ async function imageToDataURL(file){
  const compressed=canvas.toDataURL("image/jpeg",0.78);
 
  if(compressed.length>5*1024*1024){
-  throw Error("Masyadong malaki ang larawan. Pumili ng mas maliit na photo.");
+  throw Error("Image is too large. Please choose a smaller photo.");
  }
+
  return compressed;
 }
 
@@ -255,13 +562,15 @@ async function syncMenu(){
   if(remote.length){
    menu=remote.map(x=>{
     let old=menu.find(y=>String(y.id)===String(x.id));
-    let oldImage=old&&String(old.image||"").startsWith("http")?old.image:"";
+    let oldImage=old&&String(old.image||"").startsWith("http")
+     ?old.image:"";
 
     return {
      ...old,...x,
      id:String(x.id),
      price:Number(x.price),
-     available:x.available===true || x.available==="TRUE" || x.available===1,
+     available:x.available===true||
+       x.available==="TRUE"||x.available===1,
      image:x.image||oldImage||""
     };
    });
@@ -274,26 +583,15 @@ async function syncMenu(){
 
   saveData();
   renderMenu();
+  renderHomeCart();
+
   document.getElementById("connectionStatus").textContent=
-   " Connected to Google Sheets";
+   "Connected to Google Sheets";
+
  }catch(e){
   document.getElementById("connectionStatus").textContent=
-   "⚠️ Offline mode: showing saved menu. "+e.message;
+   "Offline mode: showing saved menu. "+e.message;
  }
-}
-
-// NAVIGATION
-function showPage(p){
- ["shop","cart","checkout","admin","success"].forEach(x=>
-  document.getElementById(x+"Page").classList.toggle("hidden",x!==p)
- );
-
- if(p==="shop")renderMenu();
- if(p==="cart")renderCart();
- if(p==="checkout")renderCheckout();
- if(p==="admin")renderAdmin();
-
- window.scrollTo(0,0);
 }
 
 // MENU DISPLAY
@@ -305,9 +603,10 @@ function setCanteen(n){
 function renderMenu(){
  let names=["All",...new Set(menu.map(x=>x.canteen))];
 
- document.getElementById("canteenTabs").innerHTML=names.map(n=>`
+ document.getElementById("canteenTabs").innerHTML=
+ names.map(n=>`
   <button class="${n===currentCanteen?"active":""}"
-   onclick="setCanteen('${esc(n)}')">
+   onclick="setCanteen(${sid(n)})">
    ${n==="All"?"All Canteens":esc(n)}
   </button>
  `).join("");
@@ -322,17 +621,24 @@ function renderMenu(){
     ${x.image?`
      <img src="${esc(x.image)}" alt="${esc(x.name)}"
       onerror="this.style.display='none';this.nextElementSibling.classList.remove('hidden')">
-     <div class="food-emoji hidden">${esc(x.emoji||"🍽️")}</div>
+     <div class="photo-placeholder hidden"></div>
     `:`
-     <div class="food-emoji">${esc(x.emoji||"🍽️")}</div>
+     <div class="photo-placeholder"></div>
     `}
    </div>
+
    <h3>${esc(x.name)}</h3>
    <p>${esc(x.canteen)}</p>
    <p class="price">${peso(x.price)}</p>
-   <p>${x.available?" Available":" Sold Out"}</p>
+
+   <p class="${x.available?"available":"sold"}">
+    ${x.available?"Available":"Sold Out"}
+   </p>
+
    <button ${x.available?"":"disabled"}
-    onclick="addCart(${sid(x.id)})">Add to Cart</button>
+    onclick="addCart(${sid(x.id)})">
+    Add to Cart
+   </button>
   </div>
  `).join("");
 }
@@ -343,11 +649,18 @@ function addCart(id){
  if(!x||!x.available)return;
 
  let c=cart.find(y=>String(y.id)===String(id));
+
  if(c)c.qty++;
  else cart.push({id:String(id),qty:1});
 
  updateCount();
- alert("Added to cart!");
+ renderHomeCart();
+
+ const homeCart=document.getElementById("homeCart");
+ homeCart.style.animation="none";
+ void homeCart.offsetWidth;
+ homeCart.style.animation="pop .25s ease";
+
 }
 
 function updateCount(){
@@ -355,7 +668,7 @@ function updateCount(){
  cart.reduce((s,x)=>s+x.qty,0);
 }
 
-function renderCart(){
+function renderCartContent(containerId,totalId){
  let total=0;
 
  let html=cart.map(c=>{
@@ -364,20 +677,40 @@ function renderCart(){
 
   total+=x.price*c.qty;
 
-  return `<div class="item">
-   <div><b>${esc(x.name)}</b><br>${peso(x.price)} × ${c.qty}</div>
-   <div class="actions">
-    <button onclick="changeQty(${sid(x.id)},-1)">−</button>
-    <button onclick="changeQty(${sid(x.id)},1)">+</button>
-    <button class="danger" onclick="removeCart(${sid(x.id)})">×</button>
+  return `
+   <div class="item">
+    <div class="item-info">
+     <b>${esc(x.name)}</b>
+     <div class="muted">${peso(x.price)} each</div>
+     <b>${peso(x.price*c.qty)}</b>
+    </div>
+    <div class="item-actions">
+     <button class="secondary" onclick="changeQty(${sid(x.id)},-1)">−</button>
+     <b>${c.qty}</b>
+     <button onclick="changeQty(${sid(x.id)},1)">+</button>
+     <button class="danger" onclick="removeCart(${sid(x.id)})">×</button>
+    </div>
    </div>
-  </div>`;
+  `;
  }).join("");
 
- document.getElementById("cartItems").innerHTML=
-  html||"<p>Wala pang laman ang cart mo.</p>";
+ document.getElementById(containerId).innerHTML=
+  html||`
+   <div class="cart-empty">
+    <div class="cart-empty-line"></div>
+    Your cart is currently empty.
+   </div>
+  `;
 
- document.getElementById("cartTotal").textContent="Total: "+peso(total);
+ document.getElementById(totalId).textContent=peso(total);
+}
+
+function renderHomeCart(){
+ renderCartContent("homeCartItems","homeCartTotal");
+}
+
+function renderCart(){
+ renderCartContent("cartItems","cartTotal");
 }
 
 function changeQty(id,n){
@@ -385,16 +718,22 @@ function changeQty(id,n){
  if(!c)return;
 
  c.qty+=n;
- if(c.qty<=0)removeCart(id);
- else renderCart();
+
+ if(c.qty<=0){
+  removeCart(id);
+  return;
+ }
 
  updateCount();
+ renderCart();
+ renderHomeCart();
 }
 
 function removeCart(id){
  cart=cart.filter(x=>String(x.id)!==String(id));
- renderCart();
  updateCount();
+ renderCart();
+ renderHomeCart();
 }
 
 // CHECKOUT
@@ -406,11 +745,13 @@ function renderCheckout(){
   if(!x)return "";
 
   total+=x.price*c.qty;
-  return `<p>${esc(x.name)} × ${c.qty}: ${peso(x.price*c.qty)}</p>`;
+
+  return `<p>${esc(x.name)} × ${c.qty}: <b>${peso(x.price*c.qty)}</b></p>`;
  }).join("");
 
  document.getElementById("checkoutSummary").innerHTML=
-  html+"<h3>Total: "+peso(total)+"</h3>";
+  (html||"<p>Your cart is empty.</p>")+
+  "<h3>Total: "+peso(total)+"</h3>";
 }
 
 async function placeOrder(){
@@ -418,7 +759,7 @@ async function placeOrder(){
  let phone=document.getElementById("custPhone").value.trim();
 
  if(!name||!phone||!cart.length){
-  alert("Pakilagay ang pangalan, number at order.");
+  alert("Please enter your name, phone number and order.");
   return;
  }
 
@@ -428,7 +769,7 @@ async function placeOrder(){
   let x=menu.find(y=>String(y.id)===String(c.id));
 
   if(!x||!x.available){
-   alert("May item na hindi na available.");
+   alert("An item is no longer available.");
    return;
   }
 
@@ -461,11 +802,13 @@ async function placeOrder(){
 
  try{
   await apiPost(o);
+
   orders.unshift(o);
   saveData();
 
   cart=[];
   updateCount();
+  renderHomeCart();
 
   document.getElementById("custName").value="";
   document.getElementById("custPhone").value="";
@@ -475,8 +818,9 @@ async function placeOrder(){
    "Order ID: <b>"+esc(o.id)+"</b>";
 
   showPage("success");
+
  }catch(e){
-  alert("Hindi na-save ang order: "+e.message);
+  alert("Order was not saved: "+e.message);
  }finally{
   b.disabled=false;
   b.textContent="SUBMIT ORDER";
@@ -528,7 +872,7 @@ async function renderOrders(){
  }
 
  if(!orders.length){
-  el.innerHTML="<p>Wala pang orders.</p>";
+  el.innerHTML="<p>No orders yet.</p>";
   return;
  }
 
@@ -562,6 +906,7 @@ async function renderOrders(){
 async function setStatus(id,status){
  try{
   await apiPost({action:"updateStatus",id,status});
+
   let o=orders.find(x=>String(x.id)===String(id));
   if(o)o.status=status;
 
@@ -577,6 +922,7 @@ async function deleteOrder(id){
 
  try{
   await apiPost({action:"deleteOrder",id});
+
   orders=orders.filter(x=>String(x.id)!==String(id));
   saveData();
   renderOrders();
@@ -588,7 +934,7 @@ async function deleteOrder(id){
 // MENU MANAGEMENT
 function renderManage(){
  document.getElementById("manageAdmin").innerHTML=`
-  <h3>➕ Add Food</h3>
+  <h3>Add New Food</h3>
 
   <label>Food Name</label>
   <input id="newName" placeholder="Food name">
@@ -602,10 +948,12 @@ function renderManage(){
    <option>Canteen 2</option>
   </select>
 
-  <label>Photo (optional)</label>
+  <label>Photo (Optional)</label>
   <input id="newImage" type="file" accept="image/*">
 
-  <button id="addFoodBtn" class="full" onclick="addFood()">Add Food</button>
+  <button id="addFoodBtn" class="full" onclick="addFood()">
+   Add Food
+  </button>
 
   <hr>
   <h3>Current Menu (${menu.length})</h3>
@@ -618,8 +966,8 @@ function renderManage(){
       onerror="this.style.display='none'">
     `:""}
 
-    <b>${esc(x.emoji)} ${esc(x.name)}</b>
-    <p>${peso(x.price)}</p>
+    <b>${esc(x.name)}</b>
+    <p class="price">${peso(x.price)}</p>
     <p>${esc(x.canteen)} | ${x.available?"Available":"Sold Out"}</p>
 
     <input type="file" accept="image/*" class="hidden"
@@ -628,21 +976,26 @@ function renderManage(){
 
     <div class="actions">
      <button onclick="editFood(${sid(x.id)})">Edit</button>
+
      <button class="secondary"
       onclick="document.getElementById('img_${esc(x.id)}').click()">
       ${x.image?"Change Photo":"Add Photo"}
      </button>
+
      <button class="secondary" onclick="toggleFood(${sid(x.id)})">
       ${x.available?"Sold Out":"Available"}
      </button>
-     <button class="danger" onclick="deleteFood(${sid(x.id)})">Delete</button>
+
+     <button class="danger" onclick="deleteFood(${sid(x.id)})">
+      Delete
+     </button>
     </div>
    </div>
   `).join("")}
  `;
 }
 
-// ADD FOOD - SAVE TO GOOGLE SHEETS FIRST
+// ADD FOOD
 async function addFood(){
  let name=document.getElementById("newName").value.trim();
  let price=Number(document.getElementById("newPrice").value);
@@ -670,7 +1023,7 @@ async function addFood(){
    name,
    price,
    canteen,
-   emoji:"🍽️",
+   emoji:"",
    available:true,
    image
   };
@@ -684,10 +1037,11 @@ async function addFood(){
   await syncMenu();
   renderManage();
   renderMenu();
+  renderHomeCart();
 
   alert("Food successfully added!");
  }catch(e){
-  alert("Hindi naidagdag ang food: "+e.message);
+  alert("Unable to add food: "+e.message);
  }finally{
   btn.disabled=false;
   btn.textContent="Add Food";
@@ -702,7 +1056,7 @@ async function uploadImage(id,file){
  if(!x)return;
 
  try{
-  alert("Ina-upload ang photo. Hintayin matapos.");
+  alert("Uploading photo. Please wait.");
 
   let image=await imageToDataURL(file);
 
@@ -715,15 +1069,15 @@ async function uploadImage(id,file){
   x.image=result.image||result.url||"";
   saveData();
 
-  // Kunin ang pinakabagong image URL mula sa Google Sheets.
   await syncMenu();
 
   renderManage();
   renderMenu();
+  renderHomeCart();
 
-  alert("✅ Na-upload na ang photo!");
+  alert("Photo uploaded successfully!");
  }catch(e){
-  alert("Hindi na-upload ang photo: "+e.message);
+  alert("Photo upload failed: "+e.message);
  }
 }
 
@@ -756,8 +1110,9 @@ async function editFood(id){
   saveData();
   renderManage();
   renderMenu();
+  renderHomeCart();
  }catch(e){
-  alert("Hindi na-update: "+e.message);
+  alert("Update failed: "+e.message);
  }
 }
 
@@ -771,10 +1126,12 @@ async function toggleFood(id){
 
   x.available=!x.available;
   saveData();
+
   renderManage();
   renderMenu();
+  renderHomeCart();
  }catch(e){
-  alert("Hindi na-update ang availability: "+e.message);
+  alert("Availability update failed: "+e.message);
  }
 }
 
@@ -792,15 +1149,18 @@ async function deleteFood(id){
   updateCount();
   renderManage();
   renderMenu();
+  renderHomeCart();
  }catch(e){
-  alert("Hindi na-delete ang food: "+e.message);
+  alert("Delete failed: "+e.message);
  }
 }
 
 // START
 renderMenu();
 updateCount();
+renderHomeCart();
 syncMenu();
+
 </script>
 </body>
 </html>
