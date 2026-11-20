@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="tl">
 <head>
@@ -327,7 +326,13 @@ function peso(n){return "₱"+Number(n||0).toFixed(2)}
 function esc(v){
  return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
-function sid(v){return JSON.stringify(String(v));}
+// FIX: sid() is used inside onclick="..." (double-quoted HTML attributes).
+// JSON.stringify() wraps the value in double quotes too, which closed the
+// attribute early and silently broke every button that used it (Edit,
+// photo upload, Sold Out toggle, Delete, Add to Cart, etc). Escaping the
+// result with esc() turns those quotes into &quot; so the browser decodes
+// them back into a real quote only once it hands the JS to the click handler.
+function sid(v){return esc(JSON.stringify(String(v)));}
 function boolValue(v){return v===true||String(v).toLowerCase()==="true"||String(v)==="1";}
 
 function toggleNavigation(){
