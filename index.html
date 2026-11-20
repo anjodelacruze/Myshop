@@ -17,14 +17,50 @@
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--text);font:15px Arial,sans-serif}
 button,input,select{font:inherit}
-button{
- border:0;border-radius:9px;padding:11px 14px;
- background:var(--g);color:white;font-weight:bold;
- cursor:pointer;transition:.2s
+
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 11px 14px;
+  background: var(--g);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
-button:hover{filter:brightness(1.08);transform:translateY(-1px)}
-button:disabled{opacity:.5;cursor:not-allowed;transform:none}
-input,select{
+
+/* Smooth Hover */
+button:hover:not(:disabled) {
+  transform: translateY(-4px);
+  box-shadow: 0 7px 18px rgba(23,107,74,0.22);
+  filter: brightness(1.08);
+}
+
+/* Click Animation */
+button:active:not(:disabled) {
+  transform: scale(0.94);
+  box-shadow: none;
+}
+
+/* Disabled */
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Smooth Focus */
+button:focus-visible {
+  outline: 3px solid #80c9a5;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button {
+    transition: none;
+  }
+}
+
  width:100%;padding:12px;border:1px solid #ccc;
  border-radius:8px;font-size:16px;background:white
 }
