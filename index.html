@@ -9,44 +9,35 @@
 
 <style>
 :root{
- --g:#176b4a;
- --gd:#124c37;
- --l:#e8f4ed;
- --bg:#f5f8f5;
- --white:#fff;
- --text:#18231f;
- --muted:#68756e;
- --border:#e3eae5;
- --red:#c03939;
+ --g:#176b4a;--gd:#124c37;--l:#e8f4ed;
+ --bg:#f5f8f5;--white:#fff;--text:#18231f;
+ --muted:#68756e;--border:#e3eae5;--red:#c03939;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{
- margin:0;background:var(--bg);color:var(--text);
- font:15px Arial,sans-serif;
-}
+body{margin:0;background:var(--bg);color:var(--text);font:15px Arial,sans-serif}
 button,input,select{font:inherit}
 button{
  border:0;border-radius:9px;padding:11px 14px;
  background:var(--g);color:white;font-weight:bold;
- cursor:pointer;transition:.2s;
+ cursor:pointer;transition:.2s
 }
 button:hover{filter:brightness(1.08);transform:translateY(-1px)}
 button:disabled{opacity:.5;cursor:not-allowed;transform:none}
 input,select{
  width:100%;padding:12px;border:1px solid #ccc;
- border-radius:8px;font-size:16px;background:white;
+ border-radius:8px;font-size:16px;background:white
 }
 label{display:block;margin:12px 0 5px;font-weight:bold}
+
 header{
  background:linear-gradient(120deg,var(--gd),#23865d);
- color:white;padding:15px 18px;
- position:sticky;top:0;z-index:50;
- box-shadow:0 3px 15px #0002;
+ color:white;padding:15px 18px;position:sticky;top:0;
+ z-index:50;box-shadow:0 3px 15px #0002
 }
 .header-inner{
- max-width:1100px;margin:auto;
- display:flex;align-items:center;gap:13px;
+ max-width:1100px;margin:auto;display:flex;
+ align-items:center;gap:13px
 }
 .brand-area{flex:1;min-width:0}
 .brand{font-size:21px;font-weight:bold}
@@ -54,78 +45,73 @@ header{
 .header-actions{display:flex;gap:8px}
 .header-actions button{background:#ffffff20}
 .menu-toggle{
- width:43px;height:43px;padding:0;
- display:flex;align-items:center;justify-content:center;
- flex-direction:column;gap:5px;background:#ffffff20;
+ width:43px;height:43px;padding:0;display:flex;
+ align-items:center;justify-content:center;
+ flex-direction:column;gap:5px;background:#ffffff20
 }
 .menu-toggle span{
  width:21px;height:2px;background:white;
- border-radius:5px;transition:.25s;
+ border-radius:5px;transition:.25s
 }
 .menu-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
 .menu-toggle.open span:nth-child(2){opacity:0}
 .menu-toggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
 nav{
  display:none;position:absolute;left:12px;top:70px;
  width:210px;background:white;color:var(--text);
- padding:10px;border-radius:12px;
- box-shadow:0 8px 30px #0002;
+ padding:10px;border-radius:12px;box-shadow:0 8px 30px #0002
 }
 nav.show{display:block;animation:slideDown .2s ease}
 nav button{
  display:block;width:100%;text-align:left;
- background:white;color:var(--text);margin:3px 0;
+ background:white;color:var(--text);margin:3px 0
 }
 nav button:hover{background:var(--l);color:var(--g)}
+
 main{max-width:1100px;margin:auto;padding:16px}
 .panel{
  background:white;border:1px solid var(--border);
  border-radius:14px;padding:17px;margin-bottom:16px;
- box-shadow:0 3px 12px #00000008;
+ box-shadow:0 3px 12px #00000008
 }
 h2{font-size:21px;margin:0 0 15px}
 h3{margin:8px 0}
 .muted{color:var(--muted);font-size:12px}
-.notice{
- padding:12px;border-radius:9px;
- background:var(--l);margin:10px 0;
-}
+.notice{padding:12px;border-radius:9px;background:var(--l);margin:10px 0}
 .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 .tabs button{background:var(--l);color:var(--g)}
 .tabs button.active{background:var(--g);color:white}
+
 .grid{
  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
- gap:12px;
+ gap:12px
 }
 .food{
  background:white;border:1px solid var(--border);
  border-radius:13px;padding:10px;overflow:hidden;
  transition:transform .25s,box-shadow .25s;
- animation:fadeUp .4s ease both;
+ animation:fadeUp .4s ease both
 }
-.food:hover{
- transform:translateY(-4px);
- box-shadow:0 8px 20px #00000012;
-}
+.food:hover{transform:translateY(-4px);box-shadow:0 8px 20px #00000012}
 .food-photo{
  width:100%;height:135px;border-radius:9px;
  background:linear-gradient(135deg,#e8f4ed,#dcece2);
- display:flex;align-items:center;justify-content:center;
- overflow:hidden;
+ display:flex;align-items:center;justify-content:center;overflow:hidden
 }
 .food-photo img{width:100%;height:100%;object-fit:cover}
 .photo-placeholder{
  width:42px;height:42px;border:2px solid #9abbaa;
- border-radius:10px;position:relative;opacity:.8;
+ border-radius:10px;position:relative;opacity:.8
 }
 .photo-placeholder:before{
  content:"";position:absolute;width:9px;height:9px;
- border-radius:50%;background:#9abbaa;top:7px;left:7px;
+ border-radius:50%;background:#9abbaa;top:7px;left:7px
 }
 .photo-placeholder:after{
  content:"";position:absolute;left:5px;right:5px;bottom:5px;
  height:17px;background:#9abbaa;
- clip-path:polygon(0 100%,35% 20%,55% 65%,75% 35%,100% 100%);
+ clip-path:polygon(0 100%,35% 20%,55% 65%,75% 35%,100% 100%)
 }
 .food h3{font-size:14px;margin:9px 0 5px}
 .food p{font-size:12px;margin:5px 0}
@@ -133,55 +119,73 @@ h3{margin:8px 0}
 .food button{width:100%;padding:9px;margin-top:7px}
 .sold{color:var(--red);font-weight:bold}
 .available{color:var(--g);font-weight:bold}
+
 .hidden{display:none!important}
 .full{width:100%;margin-top:9px}
 .secondary{background:var(--l);color:var(--g)}
 .danger{background:#ffeaea;color:var(--red)}
+
 .item{
- display:flex;justify-content:space-between;align-items:center;
- gap:10px;padding:12px 0;border-bottom:1px solid var(--border);
+ display:flex;justify-content:space-between;
+ align-items:center;gap:10px;padding:12px 0;
+ border-bottom:1px solid var(--border)
 }
 .item-info{flex:1;min-width:0}
 .item-actions{display:flex;align-items:center;gap:5px}
 .item-actions button{padding:8px 11px}
 .cart-total{
  display:flex;justify-content:space-between;
- font-size:19px;font-weight:bold;margin:16px 0;
- color:var(--g);
+ font-size:19px;font-weight:bold;margin:16px 0;color:var(--g)
 }
 .order{
  border:1px solid var(--border);border-radius:10px;
- padding:13px;margin-top:12px;overflow-wrap:anywhere;
+ padding:13px;margin-top:12px;overflow-wrap:anywhere
 }
 .status{
  display:inline-block;padding:5px 10px;
- border-radius:20px;background:#fff0d5;font-size:12px;
+ border-radius:20px;background:#fff0d5;font-size:12px
 }
 .status.ok{background:#dff3e5;color:green}
 .actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
 .actions button{flex:1}
-.photo-preview{
- width:100%;max-height:160px;object-fit:cover;
- border-radius:9px;margin-top:8px;
-}
 .section-heading{
  display:flex;justify-content:space-between;
- align-items:center;gap:10px;flex-wrap:wrap;
+ align-items:center;gap:10px;flex-wrap:wrap
 }
 .cart-home{border:2px solid #d5e8dc}
 .cart-empty{text-align:center;padding:20px;color:var(--muted)}
 .cart-empty-line{
  width:50px;height:40px;border:2px solid #b4cbbb;
- border-radius:8px;margin:0 auto 12px;position:relative;
+ border-radius:8px;margin:0 auto 12px;position:relative
 }
 .cart-empty-line:after{
- content:"";position:absolute;left:9px;right:9px;top:11px;
- border-top:2px solid #b4cbbb;
+ content:"";position:absolute;left:9px;right:9px;
+ top:11px;border-top:2px solid #b4cbbb
 }
-footer{
- text-align:center;padding:25px;color:var(--muted);
- font-size:12px;
+footer{text-align:center;padding:25px;color:var(--muted);font-size:12px}
+
+/* ADMIN DASHBOARD BUTTON FIX */
+.manage-actions{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:8px;
+ margin-top:12px
 }
+.manage-actions button{
+ width:100%;
+ min-width:0;
+ min-height:48px;
+ padding:10px 5px;
+ font-size:13px;
+ line-height:1.3;
+ white-space:normal;
+ overflow-wrap:break-word;
+ border-radius:10px;
+}
+.manage-actions .secondary{background:var(--l);color:var(--g)}
+.manage-actions .danger{background:#ffeaea;color:var(--red)}
+
+/* ANIMATIONS */
 @keyframes fadeUp{
  from{opacity:0;transform:translateY(12px)}
  to{opacity:1;transform:translateY(0)}
@@ -194,11 +198,16 @@ footer{
  0%{transform:scale(.96)}
  100%{transform:scale(1)}
 }
+
+/* DESKTOP */
 @media(min-width:650px){
  .grid{grid-template-columns:repeat(4,minmax(0,1fr))}
  main{padding:22px}
  .food-photo{height:155px}
+ .manage-actions{grid-template-columns:repeat(4,minmax(0,1fr))}
 }
+
+/* MOBILE */
 @media(max-width:430px){
  .brand{font-size:17px}
  .brand-sub{font-size:11px}
@@ -208,11 +217,12 @@ footer{
  .item{align-items:flex-start}
  .item-actions button{padding:8px}
 }
+
 @media(prefers-reduced-motion:reduce){
  *,*::before,*::after{
   animation-duration:.01ms!important;
   transition-duration:.01ms!important;
-  scroll-behavior:auto!important;
+  scroll-behavior:auto!important
  }
 }
 </style>
@@ -249,20 +259,17 @@ footer{
 
 <main>
 
-<!-- HOME PAGE -->
 <section id="shopPage">
  <div class="panel">
   <div class="section-heading">
    <h2>Today's Menu</h2>
    <span class="muted">Choose your favorite food</span>
   </div>
-
   <div id="connectionStatus" class="notice">Connecting...</div>
   <div id="canteenTabs" class="tabs"></div>
   <div id="menuGrid" class="grid"></div>
  </div>
 
- <!-- CART SA BABA NG HOMEPAGE -->
  <div class="panel cart-home" id="homeCart">
   <div class="section-heading">
    <h2>My Order</h2>
@@ -282,7 +289,6 @@ footer{
  </div>
 </section>
 
-<!-- CART PAGE -->
 <section id="cartPage" class="hidden">
  <div class="panel">
   <h2>My Cart</h2>
@@ -297,7 +303,6 @@ footer{
  </div>
 </section>
 
-<!-- CHECKOUT PAGE -->
 <section id="checkoutPage" class="hidden">
  <div class="panel">
   <h2>Customer Information</h2>
@@ -329,7 +334,6 @@ footer{
  </div>
 </section>
 
-<!-- ADMIN PAGE -->
 <section id="adminPage" class="hidden">
  <div id="adminLogin" class="panel">
   <h2>Admin Login</h2>
@@ -340,22 +344,16 @@ footer{
 
  <div id="adminDash" class="panel hidden">
   <h2>Admin Dashboard</h2>
-
   <div class="tabs">
    <button onclick="adminTab('orders')">Orders</button>
    <button onclick="adminTab('manage')">Manage Menu</button>
   </div>
-
   <div id="ordersAdmin"></div>
   <div id="manageAdmin" class="hidden"></div>
-
-  <button class="secondary full" onclick="logoutAdmin()">
-   Logout
-  </button>
+  <button class="secondary full" onclick="logoutAdmin()">Logout</button>
  </div>
 </section>
 
-<!-- SUCCESS PAGE -->
 <section id="successPage" class="hidden">
  <div class="panel">
   <h2>Order Submitted Successfully</h2>
@@ -374,7 +372,7 @@ footer{
 
 <script>
 
-// SETTINGS - HUWAG BAGUHIN ANG EXISTING CONNECTION
+// SETTINGS
 const ADMIN_PIN="0966";
 
 const SHEET_URL="https://script.google.com/macros/s/AKfycbwiZx_ZiEp9gJycNofrj-mypxlXgQt4NhrgqLDYWPAIwqPVuC2KovYxeKGyfwjIZiNjEQ/exec";
@@ -384,33 +382,33 @@ const ORDER_KEY="canteen_orders";
 
 // DEFAULT MENU
 const defaultMenu=[
-["1","Chicken Adobo",55,"Canteen 1",""],
-["2","Pork Menudo",50,"Canteen 1",""],
-["3","Tortang Talong",35,"Canteen 1",""],
-["4","Fried Chicken",60,"Canteen 2",""],
-["5","Pancit Bihon",30,"Canteen 2",""],
-["6","Tapsilog",65,"Canteen 2",""],
-["7","Adobong Baboy",65,"Canteen 1",""],
-["8","Adobong Manok",60,"Canteen 1",""],
-["9","Menudo",55,"Canteen 1",""],
-["10","Afritada",60,"Canteen 1",""],
-["11","Caldereta",75,"Canteen 1",""],
-["12","Mechado",70,"Canteen 1",""],
-["13","Bicol Express",65,"Canteen 2",""],
-["14","Sisig",70,"Canteen 2",""],
-["15","Dinuguan",55,"Canteen 2",""],
-["16","Pork Steak / Bistek Tagalog",60,"Canteen 2",""],
-["17","Lechon Kawali",75,"Canteen 2",""],
-["18","Tokwa't Baboy",50,"Canteen 2",""],
-["19","Lumpiang Shanghai",40,"Canteen 1",""],
-["20","Chicken Curry",65,"Canteen 1",""],
-["21","Tinola",55,"Canteen 2",""],
-["22","Pork Binagoongan",60,"Canteen 2",""],
-["23","Igado",60,"Canteen 1",""],
-["24","Coke",20,"Canteen 1",""],
-["25","Royal",20,"Canteen 1",""],
-["26","Sprite",20,"Canteen 1",""],
-["27","Saging",10,"Canteen 1",""]
+["1","Chicken Adobo",55,"Canteen 1"],
+["2","Pork Menudo",50,"Canteen 1"],
+["3","Tortang Talong",35,"Canteen 1"],
+["4","Fried Chicken",60,"Canteen 2"],
+["5","Pancit Bihon",30,"Canteen 2"],
+["6","Tapsilog",65,"Canteen 2"],
+["7","Adobong Baboy",65,"Canteen 1"],
+["8","Adobong Manok",60,"Canteen 1"],
+["9","Menudo",55,"Canteen 1"],
+["10","Afritada",60,"Canteen 1"],
+["11","Caldereta",75,"Canteen 1"],
+["12","Mechado",70,"Canteen 1"],
+["13","Bicol Express",65,"Canteen 2"],
+["14","Sisig",70,"Canteen 2"],
+["15","Dinuguan",55,"Canteen 2"],
+["16","Pork Steak / Bistek Tagalog",60,"Canteen 2"],
+["17","Lechon Kawali",75,"Canteen 2"],
+["18","Tokwa't Baboy",50,"Canteen 2"],
+["19","Lumpiang Shanghai",40,"Canteen 1"],
+["20","Chicken Curry",65,"Canteen 1"],
+["21","Tinola",55,"Canteen 2"],
+["22","Pork Binagoongan",60,"Canteen 2"],
+["23","Igado",60,"Canteen 1"],
+["24","Coke",20,"Canteen 1"],
+["25","Royal",20,"Canteen 1"],
+["26","Sprite",20,"Canteen 1"],
+["27","Saging",10,"Canteen 1"]
 ].map(x=>({
  id:x[0],name:x[1],price:x[2],canteen:x[3],
  emoji:"",image:"",available:true
@@ -432,9 +430,7 @@ function saveData(){
  localStorage.setItem(ORDER_KEY,JSON.stringify(orders));
 }
 
-function peso(n){
- return "₱"+Number(n||0).toFixed(2);
-}
+function peso(n){return "₱"+Number(n||0).toFixed(2)}
 
 function esc(v){
  return String(v??"").replace(/[&<>"']/g,c=>({
@@ -488,14 +484,10 @@ function showPage(p){
 // GOOGLE SHEETS
 async function apiGet(type){
  let r=await fetch(SHEET_URL+"?type="+encodeURIComponent(type));
-
  if(!r.ok)throw Error("Server connection failed");
 
  let d=await r.json();
-
- if(!Array.isArray(d)){
-  throw Error(d.message||"Invalid response");
- }
+ if(!Array.isArray(d))throw Error(d.message||"Invalid response");
 
  return d;
 }
@@ -626,19 +618,14 @@ function renderMenu(){
      <div class="photo-placeholder"></div>
     `}
    </div>
-
    <h3>${esc(x.name)}</h3>
    <p>${esc(x.canteen)}</p>
    <p class="price">${peso(x.price)}</p>
-
    <p class="${x.available?"available":"sold"}">
     ${x.available?"Available":"Sold Out"}
    </p>
-
    <button ${x.available?"":"disabled"}
-    onclick="addCart(${sid(x.id)})">
-    Add to Cart
-   </button>
+    onclick="addCart(${sid(x.id)})">Add to Cart</button>
   </div>
  `).join("");
 }
@@ -649,7 +636,6 @@ function addCart(id){
  if(!x||!x.available)return;
 
  let c=cart.find(y=>String(y.id)===String(id));
-
  if(c)c.qty++;
  else cart.push({id:String(id),qty:1});
 
@@ -660,7 +646,6 @@ function addCart(id){
  homeCart.style.animation="none";
  void homeCart.offsetWidth;
  homeCart.style.animation="pop .25s ease";
-
 }
 
 function updateCount(){
@@ -745,7 +730,6 @@ function renderCheckout(){
   if(!x)return "";
 
   total+=x.price*c.qty;
-
   return `<p>${esc(x.name)} × ${c.qty}: <b>${peso(x.price*c.qty)}</b></p>`;
  }).join("");
 
@@ -974,7 +958,7 @@ function renderManage(){
      id="img_${esc(x.id)}"
      onchange="uploadImage(${sid(x.id)},this.files[0])">
 
-    <div class="actions">
+    <div class="manage-actions">
      <button onclick="editFood(${sid(x.id)})">Edit</button>
 
      <button class="secondary"
@@ -1014,9 +998,7 @@ async function addFood(){
  try{
   let image="";
 
-  if(file){
-   image=await imageToDataURL(file);
-  }
+  if(file)image=await imageToDataURL(file);
 
   let x={
    id:"FOOD-"+Date.now(),
