@@ -17,460 +17,276 @@
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--text);font:15px Arial,sans-serif}
 button,input,select{font:inherit}
-
 button{
  border:0;border-radius:10px;padding:11px 14px;
  background:var(--g);color:white;font-weight:bold;
  cursor:pointer;transition:all .3s ease
 }
-button:hover:not(:disabled){
- transform:translateY(-3px);
- box-shadow:0 7px 18px rgba(23,107,74,.22);
- filter:brightness(1.08)
-}
-button:active:not(:disabled){transform:scale(.96)}
+button:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 7px 18px #176b4a30}
 button:disabled{opacity:.5;cursor:not-allowed}
-button:focus-visible{outline:3px solid #80c9a5;outline-offset:3px}
-
 input,select{
  width:100%;padding:12px;border:1px solid #ccc;
  border-radius:8px;font-size:16px;background:white
 }
 label{display:block;margin:12px 0 5px;font-weight:bold}
-
 header{
  background:linear-gradient(120deg,var(--gd),#23865d);
  color:white;padding:15px 18px;position:sticky;top:0;
  z-index:50;box-shadow:0 3px 15px #0002
 }
-.header-inner{
- max-width:1100px;margin:auto;display:flex;
- align-items:center;gap:13px
-}
+.header-inner{max-width:1100px;margin:auto;display:flex;align-items:center;gap:13px}
 .brand-area{flex:1;min-width:0}
 .brand{font-size:21px;font-weight:bold}
 .brand-sub{font-size:12px;opacity:.85;margin-top:5px}
 .header-actions{display:flex;gap:8px}
-.header-actions button{background:#ffffff20}
+.header-actions button,.menu-toggle{background:#ffffff20}
 .menu-toggle{
  width:43px;height:43px;padding:0;display:flex;
- align-items:center;justify-content:center;
- flex-direction:column;gap:5px;background:#ffffff20
+ align-items:center;justify-content:center;flex-direction:column;gap:5px
 }
-.menu-toggle span{
- width:21px;height:2px;background:white;
- border-radius:5px;transition:.25s
-}
+.menu-toggle span{width:21px;height:2px;background:white;border-radius:5px;transition:.25s}
 .menu-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
 .menu-toggle.open span:nth-child(2){opacity:0}
 .menu-toggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-
 nav{
- display:none;position:absolute;left:12px;top:70px;
- width:220px;background:white;color:var(--text);
- padding:10px;border-radius:12px;box-shadow:0 8px 30px #0002
+ display:none;position:absolute;left:12px;top:70px;width:220px;
+ background:white;color:var(--text);padding:10px;border-radius:12px;
+ box-shadow:0 8px 30px #0002
 }
 nav.show{display:block;animation:slideDown .2s ease}
-nav button{
- display:block;width:100%;text-align:left;
- background:white;color:var(--text);margin:3px 0
-}
+nav button{display:block;width:100%;text-align:left;background:white;color:var(--text);margin:3px 0}
 nav button:hover{background:var(--l);color:var(--g)}
-
 main{max-width:1100px;margin:auto;padding:16px}
 .panel{
- background:white;border:1px solid var(--border);
- border-radius:14px;padding:17px;margin-bottom:16px;
- box-shadow:0 3px 12px #00000008
+ background:white;border:1px solid var(--border);border-radius:14px;
+ padding:17px;margin-bottom:16px;box-shadow:0 3px 12px #00000008
 }
 h2{font-size:21px;margin:0 0 15px}
 h3{margin:8px 0}
 .muted{color:var(--muted);font-size:12px}
-.notice{padding:12px;border-radius:9px;background:var(--l);margin:10px 0}
+.notice{padding:12px;border-radius:9px;background:var(--l);margin:10px 0;overflow-wrap:anywhere}
 .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 .tabs button{background:var(--l);color:var(--g)}
 .tabs button.active{background:var(--g);color:white}
-
-.grid{
- display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
- gap:12px
-}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .food{
- background:white;border:1px solid var(--border);
- border-radius:13px;padding:10px;overflow:hidden;
- transition:transform .25s,box-shadow .25s;
+ background:white;border:1px solid var(--border);border-radius:13px;
+ padding:10px;overflow:hidden;transition:transform .25s,box-shadow .25s;
  animation:fadeUp .4s ease both
 }
 .food:hover{transform:translateY(-4px);box-shadow:0 8px 20px #00000012}
 .food-photo{
- width:100%;height:135px;border-radius:9px;
- background:linear-gradient(135deg,#e8f4ed,#dcece2);
+ width:100%;height:135px;border-radius:9px;background:var(--l);
  display:flex;align-items:center;justify-content:center;overflow:hidden
 }
 .food-photo img{width:100%;height:100%;object-fit:cover}
-.photo-placeholder{
- width:42px;height:42px;border:2px solid #9abbaa;
- border-radius:10px;position:relative;opacity:.8
-}
-.photo-placeholder:before{
- content:"";position:absolute;width:9px;height:9px;
- border-radius:50%;background:#9abbaa;top:7px;left:7px
-}
-.photo-placeholder:after{
- content:"";position:absolute;left:5px;right:5px;bottom:5px;
- height:17px;background:#9abbaa;
- clip-path:polygon(0 100%,35% 20%,55% 65%,75% 35%,100% 100%)
-}
+.photo-placeholder{color:#8da998;font-size:12px}
 .food h3{font-size:14px;margin:9px 0 5px}
 .food p{font-size:12px;margin:5px 0}
 .price{color:var(--g);font-weight:bold;font-size:16px}
 .food button{width:100%;padding:9px;margin-top:7px}
 .sold{color:var(--red);font-weight:bold}
 .available{color:var(--g);font-weight:bold}
-
 .hidden{display:none!important}
 .full{width:100%;margin-top:9px}
 .secondary{background:var(--l);color:var(--g)}
 .danger{background:#ffeaea;color:var(--red)}
-
 .item{
- display:flex;justify-content:space-between;
- align-items:center;gap:10px;padding:12px 0;
- border-bottom:1px solid var(--border)
+ display:flex;justify-content:space-between;align-items:center;
+ gap:10px;padding:12px 0;border-bottom:1px solid var(--border)
 }
 .item-info{flex:1;min-width:0}
 .item-actions{display:flex;align-items:center;gap:5px}
 .item-actions button{padding:8px 11px}
 .cart-total{
- display:flex;justify-content:space-between;
- font-size:19px;font-weight:bold;margin:16px 0;color:var(--g)
+ display:flex;justify-content:space-between;font-size:19px;
+ font-weight:bold;margin:16px 0;color:var(--g)
 }
-.order{
- border:1px solid var(--border);border-radius:10px;
- padding:13px;margin-top:12px;overflow-wrap:anywhere
-}
-.status{
- display:inline-block;padding:5px 10px;
- border-radius:20px;background:#fff0d5;font-size:12px
-}
+.order{border:1px solid var(--border);border-radius:10px;padding:13px;margin-top:12px;overflow-wrap:anywhere}
+.status{display:inline-block;padding:5px 10px;border-radius:20px;background:#fff0d5;font-size:12px}
 .status.ok{background:#dff3e5;color:green}
 .status.preparing{background:#e8edff;color:#354e9c}
 .status.ready{background:#dff3e5;color:#176b4a}
 .actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
 .actions button{flex:1}
-.section-heading{
- display:flex;justify-content:space-between;
- align-items:center;gap:10px;flex-wrap:wrap
-}
+.section-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .cart-home{border:2px solid #d5e8dc}
 .cart-empty{text-align:center;padding:20px;color:var(--muted)}
-.cart-empty-line{
- width:50px;height:40px;border:2px solid #b4cbbb;
- border-radius:8px;margin:0 auto 12px;position:relative
-}
-.cart-empty-line:after{
- content:"";position:absolute;left:9px;right:9px;
- top:11px;border-top:2px solid #b4cbbb
-}
 footer{text-align:center;padding:25px;color:var(--muted);font-size:12px}
-
-.manage-actions{
- display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
- gap:8px;margin-top:12px
-}
-.manage-actions button{
- width:100%;min-width:0;min-height:48px;
- padding:10px 5px;font-size:13px;line-height:1.3;
- white-space:normal;overflow-wrap:break-word;border-radius:10px
-}
-.manage-actions .secondary{background:var(--l);color:var(--g)}
-.manage-actions .danger{background:#ffeaea;color:var(--red)}
-
+.manage-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.manage-actions button{width:100%;min-width:0;min-height:45px;padding:9px 5px;font-size:13px;white-space:normal}
 .auth-wrap{max-width:440px;margin:25px auto}
 .auth-logo{
- width:55px;height:55px;border-radius:15px;
- background:var(--l);margin:0 auto 14px;
- display:flex;align-items:center;justify-content:center;
+ width:55px;height:55px;border-radius:15px;background:var(--l);
+ margin:0 auto 14px;display:flex;align-items:center;justify-content:center;
  color:var(--g);font-size:25px;font-weight:bold
 }
 .auth-title{text-align:center}
-.auth-switch{
- background:transparent;color:var(--g);
- text-decoration:underline;padding:8px
-}
+.auth-switch{background:transparent;color:var(--g);text-decoration:underline;padding:8px}
 .auth-switch:hover{box-shadow:none;transform:none}
-.account-row{
- display:flex;justify-content:space-between;
- gap:12px;padding:12px 0;border-bottom:1px solid var(--border)
-}
-.tracking-line{
- display:flex;align-items:center;gap:8px;flex-wrap:wrap;
- margin:12px 0
-}
-.tracking-step{
- flex:1;min-width:55px;text-align:center;
- font-size:10px;color:#87938b
-}
-.tracking-dot{
- width:13px;height:13px;border-radius:50%;
- background:#d9e2dc;margin:0 auto 6px
-}
+.account-row{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.tracking-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0}
+.tracking-step{flex:1;min-width:55px;text-align:center;font-size:10px;color:#87938b}
+.tracking-dot{width:13px;height:13px;border-radius:50%;background:#d9e2dc;margin:0 auto 6px}
 .tracking-step.done{color:var(--g);font-weight:bold}
 .tracking-step.done .tracking-dot{background:var(--g)}
-.order-actions{display:flex;gap:8px;flex-wrap:wrap}
-
-@keyframes fadeUp{
- from{opacity:0;transform:translateY(12px)}
- to{opacity:1;transform:translateY(0)}
-}
-@keyframes slideDown{
- from{opacity:0;transform:translateY(-8px)}
- to{opacity:1;transform:translateY(0)}
-}
-@keyframes pop{
- 0%{transform:scale(.96)}
- 100%{transform:scale(1)}
-}
-
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
 @media(min-width:650px){
  .grid{grid-template-columns:repeat(4,minmax(0,1fr))}
- main{padding:22px}
- .food-photo{height:155px}
+ main{padding:22px}.food-photo{height:155px}
  .manage-actions{grid-template-columns:repeat(4,minmax(0,1fr))}
 }
 @media(max-width:430px){
- .brand{font-size:17px}
- .brand-sub{font-size:11px}
+ .brand{font-size:17px}.brand-sub{font-size:11px}
  .header-actions button{padding:9px}
- main{padding:11px}
- .panel{padding:13px}
- .item{align-items:flex-start}
- .item-actions button{padding:8px}
+ main{padding:11px}.panel{padding:13px}
+ .item{align-items:flex-start}.item-actions button{padding:8px}
 }
 @media(prefers-reduced-motion:reduce){
- *,*::before,*::after{
-  animation-duration:.01ms!important;
-  transition-duration:.01ms!important;
-  scroll-behavior:auto!important
- }
+ *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
 }
 </style>
 </head>
 
 <body>
-
 <header>
  <div class="header-inner">
-  <button class="menu-toggle" id="menuToggle"
-   onclick="toggleNavigation()" aria-label="Open navigation">
+  <button class="menu-toggle" id="menuToggle" onclick="toggleNavigation()" aria-label="Open navigation">
    <span></span><span></span><span></span>
   </button>
-
   <div class="brand-area">
    <div class="brand">Canteen Order Hub</div>
    <div class="brand-sub">Mplace · Online Food Ordering</div>
   </div>
-
   <div class="header-actions">
    <button onclick="showPage('shop')">Home</button>
-   <button onclick="showPage('cart')">
-    Cart (<span id="cartCount">0</span>)
-   </button>
+   <button onclick="showPage('cart')">Cart (<span id="cartCount">0</span>)</button>
   </div>
  </div>
-
  <nav id="mainNavigation">
-  <button onclick="showPage('shop');closeNavigation()">Home</button>
-  <button onclick="showPage('cart');closeNavigation()">My Cart</button>
-  <button onclick="openCustomerOrders();closeNavigation()">My Orders</button>
-  <button onclick="openAccount();closeNavigation()">My Account</button>
-  <button id="navLoginButton" onclick="showPage('login');closeNavigation()">Login / Register</button>
-  <button onclick="showPage('admin');closeNavigation()">Admin Login</button>
+  <button onclick="showPage('shop')">Home</button>
+  <button onclick="showPage('cart')">My Cart</button>
+  <button onclick="openCustomerOrders()">My Orders</button>
+  <button onclick="openAccount()">My Account</button>
+  <button id="navLoginButton" onclick="showPage('login')">Login / Register</button>
+  <button onclick="showPage('admin')">Admin Login</button>
  </nav>
 </header>
 
 <main>
-
-<!-- SHOP -->
 <section id="shopPage">
  <div class="panel">
   <div class="section-heading">
-   <h2>Today's Menu</h2>
-   <span class="muted">Choose your favorite food</span>
+   <h2>Today's Menu</h2><span class="muted">Choose your favorite food</span>
   </div>
-  <div id="connectionStatus" class="notice">Connecting...</div>
+  <div id="connectionStatus" class="notice">Connecting to Google Sheets...</div>
   <div id="canteenTabs" class="tabs"></div>
   <div id="menuGrid" class="grid"></div>
  </div>
-
  <div class="panel cart-home" id="homeCart">
-  <div class="section-heading">
-   <h2>My Order</h2>
-   <span class="muted">Your selected items</span>
-  </div>
+  <div class="section-heading"><h2>My Order</h2><span class="muted">Your selected items</span></div>
   <div id="homeCartItems"></div>
-  <div class="cart-total">
-   <span>Total</span><span id="homeCartTotal">₱0.00</span>
-  </div>
+  <div class="cart-total"><span>Total</span><span id="homeCartTotal">₱0.00</span></div>
   <button class="full" onclick="goToCheckout()">Proceed to Checkout</button>
   <button class="secondary full" onclick="showPage('cart')">View Full Cart</button>
  </div>
 </section>
 
-<!-- CART -->
 <section id="cartPage" class="hidden">
  <div class="panel">
-  <h2>My Cart</h2>
-  <div id="cartItems"></div>
-  <div class="cart-total">
-   <span>Total</span><span id="cartTotal">₱0.00</span>
-  </div>
+  <h2>My Cart</h2><div id="cartItems"></div>
+  <div class="cart-total"><span>Total</span><span id="cartTotal">₱0.00</span></div>
   <button class="full" onclick="goToCheckout()">Checkout</button>
   <button class="secondary full" onclick="showPage('shop')">Continue Shopping</button>
  </div>
 </section>
 
-<!-- CHECKOUT -->
 <section id="checkoutPage" class="hidden">
  <div class="panel">
-  <h2>Checkout</h2>
-  <div id="checkoutCustomer" class="notice"></div>
-
+  <h2>Checkout</h2><div id="checkoutCustomer" class="notice"></div>
   <label>Payment Method</label>
-  <select id="payment">
-   <option value="Cash">Cash</option>
-  </select>
-
+  <select id="payment"><option value="Cash">Cash</option></select>
   <label>Additional Instructions (Optional)</label>
   <input id="custNote" placeholder="Any additional instructions">
-
-  <h3>Order Summary</h3>
-  <div id="checkoutSummary" class="notice"></div>
-
+  <h3>Order Summary</h3><div id="checkoutSummary" class="notice"></div>
   <button id="submitOrderBtn" class="full" onclick="placeOrder()">SUBMIT ORDER</button>
   <button class="secondary full" onclick="showPage('cart')">Back to Cart</button>
  </div>
 </section>
 
-<!-- LOGIN -->
 <section id="loginPage" class="hidden">
- <div class="auth-wrap">
-  <div class="panel">
-   <div class="auth-logo">CH</div>
-   <h2 class="auth-title">Customer Login</h2>
-   <p class="muted auth-title">Sign in to order and track your food.</p>
-
-   <label>Cellphone Number</label>
-   <input id="loginPhone" type="tel" placeholder="09XXXXXXXXX" autocomplete="tel">
-
-   <label>Password</label>
-   <input id="loginPassword" type="password" placeholder="Enter your password" autocomplete="current-password">
-
-   <button id="loginBtn" class="full" onclick="customerLogin()">Login</button>
-
-   <p class="auth-title">
-    Don't have an account?
-    <button class="auth-switch" onclick="showPage('register')">Create Account</button>
-   </p>
-   <button class="secondary full" onclick="showPage('shop')">Back to Menu</button>
-  </div>
- </div>
+ <div class="auth-wrap"><div class="panel">
+  <div class="auth-logo">CH</div><h2 class="auth-title">Customer Login</h2>
+  <p class="muted auth-title">Sign in to order and track your food.</p>
+  <label>Cellphone Number</label><input id="loginPhone" type="tel" placeholder="09XXXXXXXXX" autocomplete="tel">
+  <label>Password</label><input id="loginPassword" type="password" placeholder="Enter your password" autocomplete="current-password">
+  <button id="loginBtn" class="full" onclick="customerLogin()">Login</button>
+  <p class="auth-title">Don't have an account? <button class="auth-switch" onclick="showPage('register')">Create Account</button></p>
+  <button class="secondary full" onclick="showPage('shop')">Back to Menu</button>
+ </div></div>
 </section>
 
-<!-- REGISTER -->
 <section id="registerPage" class="hidden">
- <div class="auth-wrap">
-  <div class="panel">
-   <div class="auth-logo">CH</div>
-   <h2 class="auth-title">Create Customer Account</h2>
-   <p class="muted auth-title">Register to place and track your orders.</p>
-
-   <label>Full Name</label>
-   <input id="registerName" placeholder="Enter your full name" autocomplete="name">
-
-   <label>Cellphone Number</label>
-   <input id="registerPhone" type="tel" placeholder="09XXXXXXXXX" autocomplete="tel">
-
-   <label>Password</label>
-   <input id="registerPassword" type="password" placeholder="At least 6 characters" autocomplete="new-password">
-
-   <label>Confirm Password</label>
-   <input id="registerConfirm" type="password" placeholder="Confirm your password" autocomplete="new-password">
-
-   <button id="registerBtn" class="full" onclick="customerRegister()">Create Account</button>
-
-   <p class="auth-title">
-    Already have an account?
-    <button class="auth-switch" onclick="showPage('login')">Login</button>
-   </p>
-   <button class="secondary full" onclick="showPage('shop')">Back to Menu</button>
-  </div>
- </div>
+ <div class="auth-wrap"><div class="panel">
+  <div class="auth-logo">CH</div><h2 class="auth-title">Create Customer Account</h2>
+  <p class="muted auth-title">Register to place and track your orders.</p>
+  <label>Full Name</label><input id="registerName" placeholder="Enter your full name" autocomplete="name">
+  <label>Cellphone Number</label><input id="registerPhone" type="tel" placeholder="09XXXXXXXXX" autocomplete="tel">
+  <label>Password</label><input id="registerPassword" type="password" placeholder="At least 6 characters" autocomplete="new-password">
+  <label>Confirm Password</label><input id="registerConfirm" type="password" placeholder="Confirm your password" autocomplete="new-password">
+  <button id="registerBtn" class="full" onclick="customerRegister()">Create Account</button>
+  <p class="auth-title">Already have an account? <button class="auth-switch" onclick="showPage('login')">Login</button></p>
+  <button class="secondary full" onclick="showPage('shop')">Back to Menu</button>
+ </div></div>
 </section>
 
-<!-- CUSTOMER ORDERS -->
 <section id="ordersPage" class="hidden">
  <div class="panel">
-  <div class="section-heading">
-   <h2>My Orders</h2>
-   <button class="secondary" onclick="loadMyOrders()">Refresh</button>
-  </div>
+  <div class="section-heading"><h2>My Orders</h2><button class="secondary" onclick="loadMyOrders()">Refresh</button></div>
   <p class="muted">Track the progress of your orders here.</p>
-  <div id="myOrdersList"><p>Loading orders...</p></div>
+  <div id="myOrdersList">Loading orders...</div>
  </div>
 </section>
 
-<!-- ACCOUNT -->
 <section id="accountPage" class="hidden">
  <div class="panel">
-  <h2>My Account</h2>
-  <div id="accountDetails"></div>
+  <h2>My Account</h2><div id="accountDetails"></div>
   <button class="full danger" onclick="customerLogout()">Logout</button>
  </div>
 </section>
 
-<!-- ADMIN -->
 <section id="adminPage" class="hidden">
  <div id="adminLogin" class="panel">
-  <h2>Admin Login</h2>
-  <label>Admin PIN</label>
+  <h2>Admin Login</h2><label>Admin PIN</label>
   <input type="password" id="adminPin" placeholder="Enter PIN">
   <button class="full" onclick="loginAdmin()">Login</button>
  </div>
-
  <div id="adminDash" class="panel hidden">
   <h2>Admin Dashboard</h2>
   <div class="tabs">
    <button onclick="adminTab('orders')">Orders</button>
    <button onclick="adminTab('manage')">Manage Menu</button>
   </div>
-  <div id="ordersAdmin"></div>
-  <div id="manageAdmin" class="hidden"></div>
+  <div id="ordersAdmin"></div><div id="manageAdmin" class="hidden"></div>
   <button class="secondary full" onclick="logoutAdmin()">Logout</button>
  </div>
 </section>
 
-<!-- SUCCESS -->
 <section id="successPage" class="hidden">
  <div class="panel">
-  <h2>Order Submitted Successfully</h2>
-  <p>Your order has been saved.</p>
+  <h2>Order Submitted Successfully</h2><p>Your order has been saved.</p>
   <div class="notice" id="successOrderId"></div>
   <button class="full" onclick="openCustomerOrders()">Track My Order</button>
   <button class="secondary full" onclick="showPage('shop')">Back to Menu</button>
  </div>
 </section>
-
 </main>
 
-<footer>
- Canteen Order Hub Mplace<br>
- Online Food Ordering System
-</footer>
+<footer>Canteen Order Hub Mplace<br>Online Food Ordering System</footer>
 
 <script>
 const ADMIN_PIN="0966";
-
 const SHEET_URL="https://script.google.com/macros/s/AKfycbwiZx_ZiEp9gJycNofrj-mypxlXgQt4NhrgqLDYWPAIwqPVuC2KovYxeKGyfwjIZiNjEQ/exec";
 
 const MENU_KEY="canteen_menu";
@@ -479,43 +295,22 @@ const TOKEN_KEY="canteen_customer_token";
 const USER_KEY="canteen_customer_user";
 
 const defaultMenu=[
-["1","Chicken Adobo",55,"Canteen 1"],
-["2","Pork Menudo",50,"Canteen 1"],
-["3","Tortang Talong",35,"Canteen 1"],
-["4","Fried Chicken",60,"Canteen 2"],
-["5","Pancit Bihon",30,"Canteen 2"],
-["6","Tapsilog",65,"Canteen 2"],
-["7","Adobong Baboy",65,"Canteen 1"],
-["8","Adobong Manok",60,"Canteen 1"],
-["9","Menudo",55,"Canteen 1"],
-["10","Afritada",60,"Canteen 1"],
-["11","Caldereta",75,"Canteen 1"],
-["12","Mechado",70,"Canteen 1"],
-["13","Bicol Express",65,"Canteen 2"],
-["14","Sisig",70,"Canteen 2"],
-["15","Dinuguan",55,"Canteen 2"],
-["16","Pork Steak / Bistek Tagalog",60,"Canteen 2"],
-["17","Lechon Kawali",75,"Canteen 2"],
-["18","Tokwa't Baboy",50,"Canteen 2"],
-["19","Lumpiang Shanghai",40,"Canteen 1"],
-["20","Chicken Curry",65,"Canteen 1"],
-["21","Tinola",55,"Canteen 2"],
-["22","Pork Binagoongan",60,"Canteen 2"],
-["23","Igado",60,"Canteen 1"],
-["24","Coke",20,"Canteen 1"],
-["25","Royal",20,"Canteen 1"],
-["26","Sprite",20,"Canteen 1"],
-["27","Saging",10,"Canteen 1"]
-].map(x=>({
- id:x[0],name:x[1],price:x[2],canteen:x[3],
- emoji:"",image:"",available:true
-}));
+["1","Chicken Adobo",55,"Canteen 1"],["2","Pork Menudo",50,"Canteen 1"],
+["3","Tortang Talong",35,"Canteen 1"],["4","Fried Chicken",60,"Canteen 2"],
+["5","Pancit Bihon",30,"Canteen 2"],["6","Tapsilog",65,"Canteen 2"],
+["7","Adobong Baboy",65,"Canteen 1"],["8","Adobong Manok",60,"Canteen 1"],
+["9","Menudo",55,"Canteen 1"],["10","Afritada",60,"Canteen 1"],
+["11","Caldereta",75,"Canteen 1"],["12","Mechado",70,"Canteen 1"],
+["13","Bicol Express",65,"Canteen 2"],["14","Sisig",70,"Canteen 2"],
+["15","Dinuguan",55,"Canteen 2"],["16","Pork Steak / Bistek Tagalog",60,"Canteen 2"],
+["17","Lechon Kawali",75,"Canteen 2"],["18","Tokwa't Baboy",50,"Canteen 2"],
+["19","Lumpiang Shanghai",40,"Canteen 1"],["20","Chicken Curry",65,"Canteen 1"],
+["21","Tinola",55,"Canteen 2"],["22","Pork Binagoongan",60,"Canteen 2"],
+["23","Igado",60,"Canteen 1"],["24","Coke",20,"Canteen 1"],
+["25","Royal",20,"Canteen 1"],["26","Sprite",20,"Canteen 1"],["27","Saging",10,"Canteen 1"]
+].map(x=>({id:x[0],name:x[1],price:x[2],canteen:x[3],image:"",available:true}));
 
-function readStorage(k,f){
- try{return JSON.parse(localStorage.getItem(k))||f}
- catch(e){return f}
-}
-
+function readStorage(k,f){try{return JSON.parse(localStorage.getItem(k))??f}catch(e){return f}}
 let menu=readStorage(MENU_KEY,defaultMenu);
 let orders=readStorage(ORDER_KEY,[]);
 let cart=[];
@@ -530,13 +325,11 @@ function saveData(){
 }
 function peso(n){return "₱"+Number(n||0).toFixed(2)}
 function esc(v){
- return String(v??"").replace(/[&<>"']/g,c=>({
-  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
- })[c]);
+ return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
-function sid(v){return "'"+String(v).replace(/['\\]/g,"\\$&")+"'";}
+function sid(v){return JSON.stringify(String(v));}
+function boolValue(v){return v===true||String(v).toLowerCase()==="true"||String(v)==="1";}
 
-// NAVIGATION
 function toggleNavigation(){
  document.getElementById("mainNavigation").classList.toggle("show");
  document.getElementById("menuToggle").classList.toggle("open");
@@ -545,120 +338,92 @@ function closeNavigation(){
  document.getElementById("mainNavigation").classList.remove("show");
  document.getElementById("menuToggle").classList.remove("open");
 }
-document.addEventListener("click",function(e){
+document.addEventListener("click",e=>{
  const nav=document.getElementById("mainNavigation");
  const toggle=document.getElementById("menuToggle");
  if(!nav.contains(e.target)&&!toggle.contains(e.target))closeNavigation();
 });
 
-const pages=[
- "shop","cart","checkout","login","register",
- "orders","account","admin","success"
-];
-
+const pages=["shop","cart","checkout","login","register","orders","account","admin","success"];
 function showPage(p){
- pages.forEach(x=>{
-  document.getElementById(x+"Page").classList.toggle("hidden",x!==p);
- });
+ pages.forEach(x=>document.getElementById(x+"Page").classList.toggle("hidden",x!==p));
  closeNavigation();
-
  if(p==="shop"){renderMenu();renderHomeCart()}
  if(p==="cart")renderCart();
  if(p==="checkout")renderCheckout();
  if(p==="admin")renderAdmin();
  if(p==="account")renderAccount();
  if(p==="orders")loadMyOrders();
-
  window.scrollTo({top:0,behavior:"smooth"});
 }
-
 function requireLogin(){
  if(!customerToken||!currentUser){
   alert("Please login or create an account first.");
-  showPage("login");
-  return false;
+  showPage("login");return false;
  }
  return true;
 }
-
 function goToCheckout(){
  if(!cart.length){alert("Your cart is empty.");return}
  if(!requireLogin())return;
  showPage("checkout");
 }
 
-// GOOGLE SHEETS API
+/* API HELPERS: matches the Apps Script response format */
 async function apiGet(type){
- let r=await fetch(SHEET_URL+"?type="+encodeURIComponent(type));
- if(!r.ok)throw Error("Server connection failed");
- let d=await r.json();
- if(!Array.isArray(d))throw Error(d.message||"Invalid response");
- return d;
+ const response=await fetch(SHEET_URL+"?type="+encodeURIComponent(type));
+ if(!response.ok)throw Error("Server connection failed.");
+ const data=await response.json();
+ if(data.result==="error")throw Error(data.message||"Request failed.");
+ if(type==="menu")return data.menu||data.data||[];
+ if(type==="orders")return data.orders||data.data||[];
+ return data;
 }
-
 async function apiPost(data){
- let r=await fetch(SHEET_URL,{
+ const response=await fetch(SHEET_URL,{
   method:"POST",
   body:JSON.stringify(data)
  });
- let d=await r.json();
-
- if(!["success","updated","deleted"].includes(d.result)){
-  throw Error(d.message||"Request failed");
+ const result=await response.json();
+ if(!["success","updated","deleted"].includes(result.result)){
+  throw Error(result.message||"Request failed.");
  }
- return d;
+ return result;
 }
 
-// CUSTOMER AUTHENTICATION
-function saveCustomerSession(data, fallback){
+/* CUSTOMER SESSION */
+function saveCustomerSession(data,fallback){
  customerToken=data.token||"";
  currentUser=data.user||data.profile||data.customer||fallback||null;
-
- if(!customerToken||!currentUser){
-  throw Error("The server did not return a valid customer session.");
- }
-
+ if(!customerToken||!currentUser)throw Error("The server did not return a valid customer session.");
  sessionStorage.setItem(TOKEN_KEY,customerToken);
  localStorage.setItem(USER_KEY,JSON.stringify(currentUser));
  updateNavigation();
 }
-
 function clearCustomerSession(){
- customerToken="";
- currentUser=null;
+ customerToken="";currentUser=null;
  sessionStorage.removeItem(TOKEN_KEY);
  localStorage.removeItem(USER_KEY);
  updateNavigation();
 }
-
 function updateNavigation(){
  const btn=document.getElementById("navLoginButton");
  if(customerToken&&currentUser){
   btn.textContent="Logout";
-  btn.onclick=()=>{closeNavigation();customerLogout()};
+  btn.onclick=()=>customerLogout();
  }else{
   btn.textContent="Login / Register";
-  btn.onclick=()=>{closeNavigation();showPage("login")};
+  btn.onclick=()=>showPage("login");
  }
 }
-
 async function restoreCustomerSession(){
  if(!customerToken)return;
-
  try{
-  const result=await apiPost({
-   action:"getProfile",
-   token:customerToken
-  });
-
-  currentUser=result.user||result.profile||currentUser;
-  if(currentUser){
-   localStorage.setItem(USER_KEY,JSON.stringify(currentUser));
-  }
+  const result=await apiPost({action:"getProfile",token:customerToken});
+  currentUser=result.user||result.customer||currentUser;
+  localStorage.setItem(USER_KEY,JSON.stringify(currentUser));
   updateNavigation();
- }catch(e){
-  clearCustomerSession();
- }
+ }catch(e){clearCustomerSession()}
 }
 
 async function customerRegister(){
@@ -666,471 +431,228 @@ async function customerRegister(){
  const phone=document.getElementById("registerPhone").value.trim();
  const password=document.getElementById("registerPassword").value;
  const confirmPassword=document.getElementById("registerConfirm").value;
-
- if(!name||!phone||!password){
-  alert("Please complete all required fields.");
-  return;
- }
- if(password.length<6){
-  alert("Password must be at least 6 characters.");
-  return;
- }
- if(password!==confirmPassword){
-  alert("Passwords do not match.");
-  return;
- }
+ if(!name||!phone||!password){alert("Please complete all required fields.");return}
+ if(password.length<6){alert("Password must be at least 6 characters.");return}
+ if(password!==confirmPassword){alert("Passwords do not match.");return}
 
  const btn=document.getElementById("registerBtn");
- btn.disabled=true;
- btn.textContent="Creating account...";
-
+ btn.disabled=true;btn.textContent="Creating account...";
  try{
-  const result=await apiPost({
-   action:"register",
-   name,phone,password
-  });
-
+  const result=await apiPost({action:"register",name,phone,password});
   saveCustomerSession(result,{name,phone});
-  document.getElementById("registerName").value="";
-  document.getElementById("registerPhone").value="";
-  document.getElementById("registerPassword").value="";
-  document.getElementById("registerConfirm").value="";
-
+  ["registerName","registerPhone","registerPassword","registerConfirm"].forEach(id=>document.getElementById(id).value="");
   alert("Account created successfully!");
   showPage("shop");
- }catch(e){
-  alert("Registration failed: "+e.message);
- }finally{
-  btn.disabled=false;
-  btn.textContent="Create Account";
- }
+ }catch(e){alert("Registration failed: "+e.message)}
+ finally{btn.disabled=false;btn.textContent="Create Account"}
 }
-
 async function customerLogin(){
  const phone=document.getElementById("loginPhone").value.trim();
  const password=document.getElementById("loginPassword").value;
-
- if(!phone||!password){
-  alert("Enter your cellphone number and password.");
-  return;
- }
-
+ if(!phone||!password){alert("Enter your cellphone number and password.");return}
  const btn=document.getElementById("loginBtn");
- btn.disabled=true;
- btn.textContent="Signing in...";
-
+ btn.disabled=true;btn.textContent="Signing in...";
  try{
-  const result=await apiPost({
-   action:"login",
-   phone,password
-  });
-
+  const result=await apiPost({action:"login",phone,password});
   saveCustomerSession(result);
   document.getElementById("loginPhone").value="";
   document.getElementById("loginPassword").value="";
-
-  alert("Login successful!");
-  showPage("shop");
- }catch(e){
-  alert("Login failed: "+e.message);
- }finally{
-  btn.disabled=false;
-  btn.textContent="Login";
- }
+  alert("Login successful!");showPage("shop");
+ }catch(e){alert("Login failed: "+e.message)}
+ finally{btn.disabled=false;btn.textContent="Login"}
 }
-
 async function customerLogout(){
  if(!confirm("Are you sure you want to logout?"))return;
-
- try{
-  if(customerToken){
-   await apiPost({
-    action:"logout",
-    token:customerToken
-   });
-  }
- }catch(e){
-  // Local logout continues even if the server session already expired.
- }
-
- clearCustomerSession();
- alert("You have been logged out.");
- showPage("shop");
+ try{if(customerToken)await apiPost({action:"logout",token:customerToken})}catch(e){}
+ clearCustomerSession();alert("You have been logged out.");showPage("shop");
 }
-
-function openAccount(){
- if(!requireLogin())return;
- showPage("account");
-}
-
+function openAccount(){if(requireLogin())showPage("account")}
 function renderAccount(){
  const el=document.getElementById("accountDetails");
- if(!currentUser){
-  el.innerHTML="<p>Please login first.</p>";
-  return;
- }
-
+ if(!currentUser){el.innerHTML="<p>Please login first.</p>";return}
  el.innerHTML=`
-  <div class="account-row">
-   <b>Full Name</b><span>${esc(currentUser.name||"")}</span>
-  </div>
-  <div class="account-row">
-   <b>Cellphone Number</b><span>${esc(currentUser.phone||"")}</span>
-  </div>
-  <p class="muted">Your account is used to view and track your orders.</p>
- `;
+  <div class="account-row"><b>Full Name</b><span>${esc(currentUser.name)}</span></div>
+  <div class="account-row"><b>Cellphone Number</b><span>${esc(currentUser.phone)}</span></div>
+  <p class="muted">Your account is used to view and track your orders.</p>`;
 }
 
-// CUSTOMER ORDER TRACKING
-function openCustomerOrders(){
- if(!requireLogin())return;
- showPage("orders");
-}
-
+/* CUSTOMER ORDER TRACKING */
+function openCustomerOrders(){if(requireLogin())showPage("orders")}
 async function loadMyOrders(){
  const el=document.getElementById("myOrdersList");
-
  if(!requireLogin())return;
  el.innerHTML="<p>Loading your orders...</p>";
-
  try{
-  const result=await apiPost({
-   action:"getMyOrders",
-   token:customerToken
-  });
-
+  const result=await apiPost({action:"getMyOrders",token:customerToken});
   const list=result.orders||result.data||[];
-
-  if(!Array.isArray(list)||!list.length){
-   el.innerHTML="<div class='cart-empty'>You don't have any orders yet.</div>";
-   return;
-  }
-
-  el.innerHTML=list.map(o=>renderCustomerOrder(o)).join("");
- }catch(e){
-  el.innerHTML="<div class='notice'>Unable to load your orders: "+esc(e.message)+"</div>";
- }
+  if(!list.length){el.innerHTML="<div class='cart-empty'>You don't have any orders yet.</div>";return}
+  el.innerHTML=list.map(renderCustomerOrder).join("");
+ }catch(e){el.innerHTML="<div class='notice'>Unable to load orders: "+esc(e.message)+"</div>"}
 }
-
 function renderCustomerOrder(o){
  const stages=["Pending","Confirmed","Preparing","Ready","Completed"];
  const current=stages.indexOf(o.status);
- const statusClass=
-  o.status==="Completed"?"ok":
-  o.status==="Preparing"?"preparing":
-  o.status==="Ready"?"ready":"";
-
- let items=[];
- try{
-  items=Array.isArray(o.items)?o.items:JSON.parse(o.items||"[]");
- }catch(e){items=[]}
-
- return `
-  <div class="order">
-   <div class="section-heading">
-    <h3>${esc(o.id)}</h3>
-    <span class="status ${statusClass}">${esc(o.status||"Pending")}</span>
-   </div>
-   <p class="muted">${esc(o.date||"")}</p>
-
-   ${items.map(i=>`
-    <p>${Number(i.qty)} × ${esc(i.name||"Food item")} — ${peso(Number(i.price||0)*Number(i.qty||0))}</p>
-   `).join("")}
-
-   <h3 class="price">Total: ${peso(o.total)}</h3>
-
-   <div class="tracking-line">
-    ${stages.map((s,i)=>`
-     <div class="tracking-step ${current>=i?"done":""}">
-      <div class="tracking-dot"></div>
-      ${s}
-     </div>
-    `).join("")}
-   </div>
-  </div>
- `;
+ const statusClass=o.status==="Completed"?"ok":o.status==="Preparing"?"preparing":o.status==="Ready"?"ready":"";
+ const items=Array.isArray(o.items)?o.items:(()=>{try{return JSON.parse(o.items||"[]")}catch(e){return []}})();
+ return `<div class="order">
+  <div class="section-heading"><h3>${esc(o.id||o.orderId)}</h3><span class="status ${statusClass}">${esc(o.status||"Pending")}</span></div>
+  <p class="muted">${esc(o.date||"")}</p>
+  ${items.map(i=>`<p>${Number(i.qty)} × ${esc(i.name)} — ${peso(Number(i.price||0)*Number(i.qty||0))}</p>`).join("")}
+  <h3 class="price">Total: ${peso(o.total)}</h3>
+  <div class="tracking-line">${stages.map((s,i)=>`<div class="tracking-step ${current>=i?"done":""}"><div class="tracking-dot"></div>${s}</div>`).join("")}</div>
+ </div>`;
 }
 
-// PHOTO CONVERTER
+/* IMAGE PROCESSING */
 async function imageToDataURL(file){
- if(!file||!file.type.startsWith("image/")){
-  throw Error("Please select a valid image file.");
- }
-
+ if(!file||!file.type.startsWith("image/"))throw Error("Please select a valid image file.");
  const dataURL=await new Promise((resolve,reject)=>{
-  const reader=new FileReader();
-  reader.onload=()=>resolve(reader.result);
-  reader.onerror=()=>reject(Error("Cannot read image."));
-  reader.readAsDataURL(file);
+  const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(Error("Cannot read image."));reader.readAsDataURL(file);
  });
-
  const img=await new Promise((resolve,reject)=>{
-  const picture=new Image();
-  picture.onload=()=>resolve(picture);
-  picture.onerror=()=>reject(Error("Cannot open image."));
-  picture.src=dataURL;
+  const picture=new Image();picture.onload=()=>resolve(picture);picture.onerror=()=>reject(Error("Cannot open image."));picture.src=dataURL;
  });
-
- const maxSide=1200;
- const scale=Math.min(1,maxSide/Math.max(img.width,img.height));
-
+ const maxSide=1200,scale=Math.min(1,maxSide/Math.max(img.width,img.height));
  const canvas=document.createElement("canvas");
- canvas.width=Math.round(img.width*scale);
- canvas.height=Math.round(img.height*scale);
-
- const ctx=canvas.getContext("2d");
- ctx.drawImage(img,0,0,canvas.width,canvas.height);
-
- const compressed=canvas.toDataURL("image/jpeg",.78);
- if(compressed.length>5*1024*1024){
-  throw Error("Image is too large. Please choose a smaller photo.");
- }
- return compressed;
+ canvas.width=Math.round(img.width*scale);canvas.height=Math.round(img.height*scale);
+ canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);
+ return canvas.toDataURL("image/jpeg",.78);
 }
 
-// MENU SYNC
+/* MENU SYNC */
+function normalizeMenuItem(x){
+ return {
+  id:String(x.id),
+  name:String(x.name||""),
+  price:Number(x.price)||0,
+  canteen:String(x.description||x.canteen||"Canteen 1"),
+  image:String(x.image||""),
+  available:boolValue(x.available)
+ };
+}
 async function syncMenu(){
  try{
   let remote=await apiGet("menu");
-
-  if(remote.length){
-   menu=remote.map(x=>{
-    let old=menu.find(y=>String(y.id)===String(x.id));
-    let oldImage=old&&String(old.image||"").startsWith("http")?old.image:"";
-
-    return {
-     ...old,...x,
-     id:String(x.id),
-     price:Number(x.price),
-     available:x.available===true||x.available==="TRUE"||x.available===1,
-     image:x.image||oldImage||""
-    };
-   });
-  }else{
-   for(let x of defaultMenu){
-    await apiPost({action:"addFood",...x});
+  if(!remote.length){
+   // Add the starter menu only when the Menu sheet is empty.
+   for(const x of defaultMenu){
+    await apiPost({
+     action:"addMenu",id:x.id,name:x.name,
+     description:x.canteen,price:x.price,image:"",
+     available:true
+    });
    }
-   menu=defaultMenu.map(x=>({...x}));
+   remote=await apiGet("menu");
   }
-
-  saveData();
-  renderMenu();
-  renderHomeCart();
-
-  document.getElementById("connectionStatus").textContent=
-   "Connected to Google Sheets";
+  menu=remote.map(normalizeMenuItem);
+  saveData();renderMenu();renderHomeCart();
+  document.getElementById("connectionStatus").textContent="Connected to Google Sheets";
  }catch(e){
-  document.getElementById("connectionStatus").textContent=
-   "Offline mode: showing saved menu. "+e.message;
+  document.getElementById("connectionStatus").textContent="Unable to sync: "+e.message;
+  renderMenu();
  }
 }
 
-// MENU DISPLAY
-function setCanteen(n){
- currentCanteen=n;
- renderMenu();
-}
-
+/* MENU DISPLAY */
+function setCanteen(n){currentCanteen=n;renderMenu()}
 function renderMenu(){
- let names=["All",...new Set(menu.map(x=>x.canteen))];
-
- document.getElementById("canteenTabs").innerHTML=
- names.map(n=>`
-  <button class="${n===currentCanteen?"active":""}"
-   onclick="setCanteen(${sid(n)})">
-   ${n==="All"?"All Canteens":esc(n)}
-  </button>
- `).join("");
-
- let items=menu.filter(x=>
-  currentCanteen==="All"||x.canteen===currentCanteen
- );
-
+ const names=["All",...new Set(menu.map(x=>x.canteen))];
+ document.getElementById("canteenTabs").innerHTML=names.map(n=>
+  `<button class="${n===currentCanteen?"active":""}" onclick="setCanteen(${sid(n)})">${n==="All"?"All Canteens":esc(n)}</button>`
+ ).join("");
+ const items=menu.filter(x=>currentCanteen==="All"||x.canteen===currentCanteen);
  document.getElementById("menuGrid").innerHTML=items.map(x=>`
   <div class="food">
-   <div class="food-photo">
-    ${x.image?`
-     <img src="${esc(x.image)}" alt="${esc(x.name)}"
-      onerror="this.style.display='none';this.nextElementSibling.classList.remove('hidden')">
-     <div class="photo-placeholder hidden"></div>
-    `:`<div class="photo-placeholder"></div>`}
-   </div>
-   <h3>${esc(x.name)}</h3>
-   <p>${esc(x.canteen)}</p>
+   <div class="food-photo">${x.image?`<img src="${esc(x.image)}" alt="${esc(x.name)}" onerror="this.style.display='none'">`:`<div class="photo-placeholder">Food photo</div>`}</div>
+   <h3>${esc(x.name)}</h3><p>${esc(x.canteen)}</p>
    <p class="price">${peso(x.price)}</p>
-   <p class="${x.available?"available":"sold"}">
-    ${x.available?"Available":"Sold Out"}
-   </p>
-   <button ${x.available?"":"disabled"}
-    onclick="addCart(${sid(x.id)})">Add to Cart</button>
-  </div>
- `).join("");
+   <p class="${x.available?"available":"sold"}">${x.available?"Available":"Sold Out"}</p>
+   <button ${x.available?"":"disabled"} onclick="addCart(${sid(x.id)})">Add to Cart</button>
+  </div>`).join("");
 }
 
-// CART
+/* CART */
 function addCart(id){
- let x=menu.find(y=>String(y.id)===String(id));
+ const x=menu.find(y=>y.id===String(id));
  if(!x||!x.available)return;
-
  if(!requireLogin())return;
-
- let c=cart.find(y=>String(y.id)===String(id));
- if(c)c.qty++;
- else cart.push({id:String(id),qty:1});
-
- updateCount();
- renderHomeCart();
-
- const homeCart=document.getElementById("homeCart");
- homeCart.style.animation="none";
- void homeCart.offsetWidth;
- homeCart.style.animation="pop .25s ease";
+ const c=cart.find(y=>y.id===String(id));
+ if(c)c.qty++;else cart.push({id:String(id),qty:1});
+ updateCount();renderHomeCart();
 }
-
-function updateCount(){
- document.getElementById("cartCount").textContent=
- cart.reduce((s,x)=>s+x.qty,0);
-}
-
+function updateCount(){document.getElementById("cartCount").textContent=cart.reduce((s,x)=>s+x.qty,0)}
 function renderCartContent(containerId,totalId){
  let total=0;
-
- let html=cart.map(c=>{
-  let x=menu.find(y=>String(y.id)===String(c.id));
-  if(!x)return "";
-
+ const html=cart.map(c=>{
+  const x=menu.find(y=>y.id===c.id);if(!x)return "";
   total+=x.price*c.qty;
-
-  return `
-   <div class="item">
-    <div class="item-info">
-     <b>${esc(x.name)}</b>
-     <div class="muted">${peso(x.price)} each</div>
-     <b>${peso(x.price*c.qty)}</b>
-    </div>
-    <div class="item-actions">
-     <button class="secondary" onclick="changeQty(${sid(x.id)},-1)">−</button>
-     <b>${c.qty}</b>
-     <button onclick="changeQty(${sid(x.id)},1)">+</button>
-     <button class="danger" onclick="removeCart(${sid(x.id)})">×</button>
-    </div>
+  return `<div class="item">
+   <div class="item-info"><b>${esc(x.name)}</b><div class="muted">${peso(x.price)} each</div><b>${peso(x.price*c.qty)}</b></div>
+   <div class="item-actions">
+    <button class="secondary" onclick="changeQty(${sid(x.id)},-1)">−</button>
+    <b>${c.qty}</b>
+    <button onclick="changeQty(${sid(x.id)},1)">+</button>
+    <button class="danger" onclick="removeCart(${sid(x.id)})">×</button>
    </div>
-  `;
+  </div>`;
  }).join("");
-
- document.getElementById(containerId).innerHTML=html||`
-  <div class="cart-empty">
-   <div class="cart-empty-line"></div>
-   Your cart is currently empty.
-  </div>
- `;
-
+ document.getElementById(containerId).innerHTML=html||`<div class="cart-empty">Your cart is currently empty.</div>`;
  document.getElementById(totalId).textContent=peso(total);
 }
 function renderHomeCart(){renderCartContent("homeCartItems","homeCartTotal")}
 function renderCart(){renderCartContent("cartItems","cartTotal")}
-
 function changeQty(id,n){
- let c=cart.find(x=>String(x.id)===String(id));
- if(!c)return;
- c.qty+=n;
- if(c.qty<=0){removeCart(id);return}
- updateCount();
- renderCart();
- renderHomeCart();
+ const c=cart.find(x=>x.id===String(id));if(!c)return;
+ c.qty+=n;if(c.qty<=0){removeCart(id);return}
+ updateCount();renderCart();renderHomeCart();
 }
 function removeCart(id){
- cart=cart.filter(x=>String(x.id)!==String(id));
- updateCount();
- renderCart();
- renderHomeCart();
+ cart=cart.filter(x=>x.id!==String(id));
+ updateCount();renderCart();renderHomeCart();
 }
 
-// CHECKOUT
+/* CHECKOUT */
 function renderCheckout(){
  if(!currentUser)return;
-
- document.getElementById("checkoutCustomer").innerHTML=
-  "Ordering as <b>"+esc(currentUser.name||"")+"</b> · "+
-  esc(currentUser.phone||"");
-
+ document.getElementById("checkoutCustomer").innerHTML="Ordering as <b>"+esc(currentUser.name)+"</b> · "+esc(currentUser.phone);
  let total=0;
- let html=cart.map(c=>{
-  let x=menu.find(y=>String(y.id)===String(c.id));
-  if(!x)return "";
-  total+=x.price*c.qty;
-  return `<p>${esc(x.name)} × ${c.qty}: <b>${peso(x.price*c.qty)}</b></p>`;
+ const html=cart.map(c=>{
+  const x=menu.find(y=>y.id===c.id);if(!x)return "";
+  total+=x.price*c.qty;return `<p>${esc(x.name)} × ${c.qty}: <b>${peso(x.price*c.qty)}</b></p>`;
  }).join("");
-
- document.getElementById("checkoutSummary").innerHTML=
-  (html||"<p>Your cart is empty.</p>")+
-  "<h3>Total: "+peso(total)+"</h3>";
+ document.getElementById("checkoutSummary").innerHTML=(html||"<p>Your cart is empty.</p>")+"<h3>Total: "+peso(total)+"</h3>";
 }
-
 async function placeOrder(){
  if(!requireLogin())return;
  if(!cart.length){alert("Your cart is empty.");return}
-
- let items=[];
-
- for(let c of cart){
-  let x=menu.find(y=>String(y.id)===String(c.id));
-  if(!x||!x.available){
-   alert("An item is no longer available.");
-   return;
-  }
-  // Server verifies the item and price using the Menu sheet.
-  items.push({id:String(x.id),qty:Number(c.qty)});
+ const items=[];
+ for(const c of cart){
+  const x=menu.find(y=>y.id===c.id);
+  if(!x||!x.available){alert("An item is no longer available.");return}
+  items.push({id:x.id,qty:Number(c.qty)});
  }
-
- let o={
-  action:"createOrder",
-  token:customerToken,
-  payment:"Cash",
-  note:document.getElementById("custNote").value.trim(),
-  items
- };
-
- let b=document.getElementById("submitOrderBtn");
- b.disabled=true;
- b.textContent="Submitting...";
-
+ const btn=document.getElementById("submitOrderBtn");
+ btn.disabled=true;btn.textContent="Submitting...";
  try{
-  const result=await apiPost(o);
-
-  cart=[];
-  updateCount();
-  renderHomeCart();
-
+  const result=await apiPost({
+   action:"createOrder",token:customerToken,
+   payment:"Cash",note:document.getElementById("custNote").value.trim(),items
+  });
+  cart=[];updateCount();renderHomeCart();
   document.getElementById("custNote").value="";
-
-  const orderId=result.id||result.orderId||"Your order has been received";
-  document.getElementById("successOrderId").innerHTML=
-   "Order ID: <b>"+esc(orderId)+"</b>";
-
+  document.getElementById("successOrderId").innerHTML="Order ID: <b>"+esc(result.id||result.orderId||"Received")+"</b>";
   showPage("success");
- }catch(e){
-  alert("Order was not saved: "+e.message);
- }finally{
-  b.disabled=false;
-  b.textContent="SUBMIT ORDER";
- }
+ }catch(e){alert("Order was not saved: "+e.message)}
+ finally{btn.disabled=false;btn.textContent="SUBMIT ORDER"}
 }
 
-// ADMIN
+/* ADMIN */
 function loginAdmin(){
  if(document.getElementById("adminPin").value===ADMIN_PIN){
-  isAdmin=true;
-  document.getElementById("adminPin").value="";
-  renderAdmin();
- }else{
-  alert("Wrong PIN!");
- }
+  isAdmin=true;document.getElementById("adminPin").value="";renderAdmin();
+ }else alert("Wrong PIN!");
 }
-function logoutAdmin(){
- isAdmin=false;
- renderAdmin();
-}
+function logoutAdmin(){isAdmin=false;renderAdmin()}
 function renderAdmin(){
  document.getElementById("adminLogin").classList.toggle("hidden",isAdmin);
  document.getElementById("adminDash").classList.toggle("hidden",!isAdmin);
@@ -1143,265 +665,128 @@ function adminTab(t){
  if(t==="manage")renderManage();
 }
 
-// ADMIN ORDERS
+/* ADMIN ORDERS */
 async function renderOrders(){
- let el=document.getElementById("ordersAdmin");
+ const el=document.getElementById("ordersAdmin");
  el.innerHTML="<p>Loading orders...</p>";
-
- try{
-  orders=await apiGet("orders");
-  saveData();
- }catch(e){
-  el.innerHTML="<div class='notice'>Cannot load orders: "+esc(e.message)+"</div>";
-  return;
- }
-
- if(!orders.length){
-  el.innerHTML="<p>No orders yet.</p>";
-  return;
- }
-
+ try{orders=await apiGet("orders");saveData()}
+ catch(e){el.innerHTML="<div class='notice'>Cannot load orders: "+esc(e.message)+"</div>";return}
+ if(!orders.length){el.innerHTML="<p>No orders yet.</p>";return}
  el.innerHTML=[...orders].reverse().map(o=>{
-  let items=[];
-  try{
-   items=Array.isArray(o.items)?o.items:JSON.parse(o.items||"[]");
-  }catch(e){items=[]}
-
-  return `
-   <div class="order">
-    <h3>${esc(o.id)}</h3>
-    <p><b>${esc(o.name)}</b></p>
-    <p>Phone: ${esc(o.phone)}</p>
-    <p>Payment: ${esc(o.payment)}</p>
-    <p>Note: ${esc(o.note||"None")}</p>
-    <p>Status: <span class="status">${esc(o.status)}</span></p>
-
-    ${items.map(i=>`
-     <p>${Number(i.qty)} × ${esc(i.name)} - ${peso(Number(i.price)*Number(i.qty))}</p>
-    `).join("")}
-
-    <h3>${peso(o.total)}</h3>
-    <p class="muted">${esc(o.date)}</p>
-
-    <div class="actions">
-     ${o.status==="Pending"?`<button onclick="setStatus(${sid(o.id)},'Confirmed')">Confirm</button>`:""}
-     ${o.status==="Confirmed"?`<button onclick="setStatus(${sid(o.id)},'Preparing')">Preparing</button>`:""}
-     ${o.status==="Preparing"?`<button onclick="setStatus(${sid(o.id)},'Ready')">Ready</button>`:""}
-     ${o.status==="Ready"?`<button onclick="setStatus(${sid(o.id)},'Completed')">Completed</button>`:""}
-     <button class="danger" onclick="deleteOrder(${sid(o.id)})">Delete</button>
-    </div>
+  const items=Array.isArray(o.items)?o.items:(()=>{try{return JSON.parse(o.items||"[]")}catch(e){return []}})();
+  return `<div class="order">
+   <h3>${esc(o.id||o.orderId)}</h3>
+   <p><b>${esc(o.customer||o.name||"Customer")}</b></p>
+   <p>Phone: ${esc(o.phone)}</p><p>Payment: ${esc(o.payment)}</p>
+   <p>Instructions: ${esc(o.note||"None")}</p>
+   <p>Status: <span class="status">${esc(o.status||"Pending")}</span></p>
+   ${items.map(i=>`<p>${Number(i.qty)} × ${esc(i.name)} - ${peso(Number(i.price)*Number(i.qty))}</p>`).join("")}
+   <h3>${peso(o.total)}</h3><p class="muted">${esc(o.date)}</p>
+   <div class="actions">
+    ${o.status==="Pending"?`<button onclick="setStatus(${sid(o.id)},'Confirmed')">Confirm</button>`:""}
+    ${o.status==="Confirmed"?`<button onclick="setStatus(${sid(o.id)},'Preparing')">Preparing</button>`:""}
+    ${o.status==="Preparing"?`<button onclick="setStatus(${sid(o.id)},'Ready')">Ready</button>`:""}
+    ${o.status==="Ready"?`<button onclick="setStatus(${sid(o.id)},'Completed')">Completed</button>`:""}
+    <button class="danger" onclick="deleteOrder(${sid(o.id)})">Delete</button>
    </div>
-  `;
+  </div>`;
  }).join("");
 }
-
 async function setStatus(id,status){
- try{
-  await apiPost({action:"updateStatus",id,status});
-  let o=orders.find(x=>String(x.id)===String(id));
-  if(o)o.status=status;
-  saveData();
-  renderOrders();
- }catch(e){alert(e.message)}
+ try{await apiPost({action:"updateOrderStatus",id,status});await renderOrders()}
+ catch(e){alert("Status update failed: "+e.message)}
 }
 async function deleteOrder(id){
  if(!confirm("Delete this order permanently?"))return;
- try{
-  await apiPost({action:"deleteOrder",id});
-  orders=orders.filter(x=>String(x.id)!==String(id));
-  saveData();
-  renderOrders();
- }catch(e){alert(e.message)}
+ try{await apiPost({action:"deleteOrder",id});await renderOrders()}
+ catch(e){alert("Delete failed: "+e.message)}
 }
 
-// MENU MANAGEMENT
+/* MENU MANAGEMENT */
 function renderManage(){
  document.getElementById("manageAdmin").innerHTML=`
   <h3>Add New Food</h3>
-
-  <label>Food Name</label>
-  <input id="newName" placeholder="Food name">
-
-  <label>Price</label>
-  <input id="newPrice" type="number" min="0.01" placeholder="Price">
-
-  <label>Canteen</label>
-  <select id="newCanteen">
-   <option>Canteen 1</option>
-   <option>Canteen 2</option>
-  </select>
-
-  <label>Photo (Optional)</label>
-  <input id="newImage" type="file" accept="image/*">
-
+  <label>Food Name</label><input id="newName" placeholder="Food name">
+  <label>Price</label><input id="newPrice" type="number" min="0.01" placeholder="Price">
+  <label>Canteen</label><select id="newCanteen"><option>Canteen 1</option><option>Canteen 2</option></select>
+  <label>Photo (Optional)</label><input id="newImage" type="file" accept="image/*">
   <button id="addFoodBtn" class="full" onclick="addFood()">Add Food</button>
-
-  <hr>
-  <h3>Current Menu (${menu.length})</h3>
-
+  <hr><h3>Current Menu (${menu.length})</h3>
   ${menu.map(x=>`
    <div class="order">
-    ${x.image?`
-     <img src="${esc(x.image)}" alt="${esc(x.name)}"
-      style="width:100%;max-height:140px;object-fit:cover;border-radius:9px;margin-bottom:8px"
-      onerror="this.style.display='none'">
-    `:""}
-
-    <b>${esc(x.name)}</b>
-    <p class="price">${peso(x.price)}</p>
+    ${x.image?`<img src="${esc(x.image)}" alt="${esc(x.name)}" style="width:100%;max-height:140px;object-fit:cover;border-radius:9px;margin-bottom:8px">`:""}
+    <b>${esc(x.name)}</b><p class="price">${peso(x.price)}</p>
     <p>${esc(x.canteen)} | ${x.available?"Available":"Sold Out"}</p>
-
-    <input type="file" accept="image/*" class="hidden"
-     id="img_${esc(x.id)}"
-     onchange="uploadImage(${sid(x.id)},this.files[0])">
-
+    <input type="file" accept="image/*" class="hidden" id="img_${esc(x.id)}" onchange="uploadImage(${sid(x.id)},this.files[0])">
     <div class="manage-actions">
      <button onclick="editFood(${sid(x.id)})">Edit</button>
-     <button class="secondary"
-      onclick="document.getElementById('img_${esc(x.id)}').click()">
-      ${x.image?"Change Photo":"Add Photo"}
-     </button>
-     <button class="secondary" onclick="toggleFood(${sid(x.id)})">
-      ${x.available?"Sold Out":"Available"}
-     </button>
+     <button class="secondary" onclick="document.getElementById('img_${esc(x.id)}').click()">${x.image?"Change Photo":"Add Photo"}</button>
+     <button class="secondary" onclick="toggleFood(${sid(x.id)})">${x.available?"Sold Out":"Available"}</button>
      <button class="danger" onclick="deleteFood(${sid(x.id)})">Delete</button>
     </div>
-   </div>
-  `).join("")}
- `;
+   </div>`).join("")}`;
 }
-
 async function addFood(){
- let name=document.getElementById("newName").value.trim();
- let price=Number(document.getElementById("newPrice").value);
- let canteen=document.getElementById("newCanteen").value;
- let file=document.getElementById("newImage").files[0];
-
- if(!name||!Number.isFinite(price)||price<=0){
-  alert("Enter valid food name and price.");
-  return;
- }
-
- let btn=document.getElementById("addFoodBtn");
- btn.disabled=true;
- btn.textContent="Saving...";
-
+ const name=document.getElementById("newName").value.trim();
+ const price=Number(document.getElementById("newPrice").value);
+ const canteen=document.getElementById("newCanteen").value;
+ const file=document.getElementById("newImage").files[0];
+ if(!name||!Number.isFinite(price)||price<=0){alert("Enter valid food name and price.");return}
+ const btn=document.getElementById("addFoodBtn");btn.disabled=true;btn.textContent="Saving...";
  try{
   let image="";
-  if(file)image=await imageToDataURL(file);
-
-  let x={
-   id:"FOOD-"+Date.now(),name,price,canteen,
-   emoji:"",available:true,image
-  };
-
-  let result=await apiPost({action:"addFood",...x});
-  x.image=result.image||"";
-  menu.push(x);
-  saveData();
-
-  await syncMenu();
-  renderManage();
-  renderMenu();
-  renderHomeCart();
-  alert("Food successfully added!");
- }catch(e){
-  alert("Unable to add food: "+e.message);
- }finally{
-  btn.disabled=false;
-  btn.textContent="Add Food";
- }
+  if(file)image=await uploadImageToDrive(file);
+  await apiPost({
+   action:"addMenu",id:"FOOD-"+Date.now(),name,
+   description:canteen,price,image,available:true
+  });
+  await syncMenu();renderManage();alert("Food successfully added!");
+ }catch(e){alert("Unable to add food: "+e.message)}
+ finally{btn.disabled=false;btn.textContent="Add Food"}
 }
-
-// UPLOAD PHOTO TO GOOGLE DRIVE
+async function uploadImageToDrive(file){
+ const base64=await imageToDataURL(file);
+ const result=await apiPost({
+  action:"uploadImage",
+  base64:base64,
+  fileName:file.name||("food-"+Date.now()+".jpg"),
+  mimeType:"image/jpeg"
+ });
+ return result.image||result.url||"";
+}
 async function uploadImage(id,file){
  if(!file)return;
- let x=menu.find(y=>String(y.id)===String(id));
- if(!x)return;
-
  try{
   alert("Uploading photo. Please wait.");
-  let image=await imageToDataURL(file);
-
-  let result=await apiPost({
-   action:"uploadImage",
-   id:id,
-   image:image
-  });
-
-  x.image=result.image||result.url||"";
-  saveData();
-
-  await syncMenu();
-  renderManage();
-  renderMenu();
-  renderHomeCart();
-
-  alert("Photo uploaded successfully!");
- }catch(e){
-  alert("Photo upload failed: "+e.message);
- }
+  const image=await uploadImageToDrive(file);
+  await apiPost({action:"updateMenu",id,image});
+  await syncMenu();renderManage();alert("Photo uploaded successfully!");
+ }catch(e){alert("Photo upload failed: "+e.message)}
 }
-
-// EDIT FOOD
 async function editFood(id){
- let x=menu.find(y=>String(y.id)===String(id));
- if(!x)return;
-
- let name=prompt("Food name:",x.name);
- if(name===null)return;
-
- let price=Number(prompt("Price:",x.price));
- if(!name.trim()||!Number.isFinite(price)||price<=0){
-  alert("Invalid name or price.");
-  return;
- }
-
+ const x=menu.find(y=>y.id===String(id));if(!x)return;
+ const name=prompt("Food name:",x.name);if(name===null)return;
+ const price=Number(prompt("Price:",x.price));if(!name.trim()||!Number.isFinite(price)||price<=0){alert("Invalid name or price.");return}
+ const canteen=prompt("Canteen name:",x.canteen);if(canteen===null)return;
  try{
-  await apiPost({
-   action:"editFood",id:x.id,name:name.trim(),price:price
-  });
-  x.name=name.trim();
-  x.price=price;
-  saveData();
-  renderManage();
-  renderMenu();
-  renderHomeCart();
+  await apiPost({action:"updateMenu",id:x.id,name:name.trim(),price,description:canteen.trim()||x.canteen});
+  await syncMenu();renderManage();
  }catch(e){alert("Update failed: "+e.message)}
 }
-
-// TOGGLE AVAILABILITY
 async function toggleFood(id){
- let x=menu.find(y=>String(y.id)===String(id));
- if(!x)return;
-
- try{
-  await apiPost({action:"toggleFood",id:x.id});
-  x.available=!x.available;
-  saveData();
-  renderManage();
-  renderMenu();
-  renderHomeCart();
- }catch(e){alert("Availability update failed: "+e.message)}
+ try{await apiPost({action:"toggleMenu",id});await syncMenu();renderManage()}
+ catch(e){alert("Availability update failed: "+e.message)}
 }
-
-// DELETE FOOD
 async function deleteFood(id){
  if(!confirm("Delete this food?"))return;
-
  try{
-  await apiPost({action:"deleteFood",id});
-  menu=menu.filter(x=>String(x.id)!==String(id));
-  cart=cart.filter(x=>String(x.id)!==String(id));
-  saveData();
-  updateCount();
-  renderManage();
-  renderMenu();
-  renderHomeCart();
+  await apiPost({action:"deleteMenu",id});
+  cart=cart.filter(x=>x.id!==String(id));
+  updateCount();await syncMenu();renderManage();renderHomeCart();
  }catch(e){alert("Delete failed: "+e.message)}
 }
 
-// START
+/* START */
 renderMenu();
 updateCount();
 renderHomeCart();
