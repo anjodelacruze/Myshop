@@ -22,6 +22,7 @@ button{
  cursor:pointer;transition:all .3s ease
 }
 button:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 7px 18px #176b4a30}
+button:active:not(:disabled){transform:translateY(0) scale(.97)}
 button:disabled{opacity:.5;cursor:not-allowed}
 input,select{
  width:100%;padding:12px;border:1px solid #ccc;
@@ -101,7 +102,13 @@ h3{margin:8px 0}
  display:flex;justify-content:space-between;font-size:19px;
  font-weight:bold;margin:16px 0;color:var(--g)
 }
-.order{border:1px solid var(--border);border-radius:10px;padding:13px;margin-top:12px;overflow-wrap:anywhere}
+.order{position:relative;border:1px solid var(--border);border-radius:10px;padding:13px;margin-top:12px;overflow-wrap:anywhere}
+.order-loading-overlay{display:none;position:absolute;inset:0;align-items:center;justify-content:center;background:#ffffffcc;border-radius:10px;backdrop-filter:blur(1px);z-index:2}
+.order.order-loading .order-loading-overlay{display:flex}
+.order.order-loading .actions button{pointer-events:none;opacity:.5}
+.spinner{width:26px;height:26px;border-radius:50%;border:3px solid var(--l);border-top-color:var(--g);animation:spin .7s linear infinite}
+.order.order-updated{animation:orderPulse .6s ease}
+.order.order-removing{animation:orderRemove .3s ease forwards;pointer-events:none}
 .status{display:inline-block;padding:5px 10px;border-radius:20px;background:#fff0d5;font-size:12px}
 .status.ok{background:#dff3e5;color:green}
 .status.preparing{background:#e8edff;color:#354e9c}
@@ -131,6 +138,9 @@ footer{text-align:center;padding:25px;color:var(--muted);font-size:12px}
 .tracking-step.done .tracking-dot{background:var(--g)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes orderPulse{0%{box-shadow:0 0 0 0 #176b4a4d;background:var(--l)}100%{box-shadow:0 0 0 14px #176b4a00;background:#fff}}
+@keyframes orderRemove{to{opacity:0;transform:scale(.95)}}
 @media(min-width:650px){
  .grid{grid-template-columns:repeat(4,minmax(0,1fr))}
  main{padding:22px}.food-photo{height:155px}
@@ -671,20 +681,19 @@ function adminTab(t){
 }
 
 /* ADMIN ORDERS */
-async function renderOrders(){
- const el=document.getElementById("ordersAdmin");
- el.innerHTML="<p>Loading orders...</p>";
- try{orders=await apiGet("orders");saveData()}
- catch(e){el.innerHTML="<div class='notice'>Cannot load orders: "+esc(e.message)+"</div>";return}
- if(!orders.length){el.innerHTML="<p>No orders yet.</p>";return}
- el.innerHTML=[...orders].reverse().map(o=>{
-  const items=Array.isArray(o.items)?o.items:(()=>{try{return JSON.parse(o.items||"[]")}catch(e){return []}})();
-  return `<div class="order">
+function orderCardEl(id){
+ return document.querySelector('.order[data-order-id="'+CSS.escape(String(id))+'"]');
+}
+function renderOrderCard(o){
+ const items=Array.isArray(o.items)?o.items:(()=>{try{return JSON.parse(o.items||"[]")}catch(e){return []}})();
+ const statusClass=o.status==="Completed"?"ok":o.status==="Preparing"?"preparing":o.status==="Ready"?"ready":"";
+ return `<div class="order" data-order-id="${esc(o.id)}">
+   <div class="order-loading-overlay"><span class="spinner"></span></div>
    <h3>${esc(o.id||o.orderId)}</h3>
    <p><b>${esc(o.customer||o.name||"Customer")}</b></p>
    <p>Phone: ${esc(o.phone)}</p><p>Payment: ${esc(o.payment)}</p>
    <p>Instructions: ${esc(o.note||"None")}</p>
-   <p>Status: <span class="status">${esc(o.status||"Pending")}</span></p>
+   <p>Status: <span class="status ${statusClass}">${esc(o.status||"Pending")}</span></p>
    ${items.map(i=>`<p>${Number(i.qty)} × ${esc(i.name)} - ${peso(Number(i.price)*Number(i.qty))}</p>`).join("")}
    <h3>${peso(o.total)}</h3><p class="muted">${esc(o.date)}</p>
    <div class="actions">
@@ -695,16 +704,56 @@ async function renderOrders(){
     <button class="danger" onclick="deleteOrder(${sid(o.id)})">Delete</button>
    </div>
   </div>`;
- }).join("");
+}
+async function renderOrders(){
+ const el=document.getElementById("ordersAdmin");
+ el.innerHTML="<p>Loading orders...</p>";
+ try{orders=await apiGet("orders");saveData()}
+ catch(e){el.innerHTML="<div class='notice'>Cannot load orders: "+esc(e.message)+"</div>";return}
+ if(!orders.length){el.innerHTML="<p>No orders yet.</p>";return}
+ el.innerHTML=[...orders].reverse().map(renderOrderCard).join("");
 }
 async function setStatus(id,status){
- try{await apiPost({action:"updateOrderStatus",id,status});await renderOrders()}
- catch(e){alert("Status update failed: "+e.message)}
+ const card=orderCardEl(id);
+ if(card)card.classList.add("order-loading");
+ try{
+  await apiPost({action:"updateOrderStatus",id,status});
+  const o=orders.find(x=>String(x.id)===String(id));
+  if(o){
+   o.status=status;saveData();
+   if(card){
+    card.outerHTML=renderOrderCard(o);
+    const fresh=orderCardEl(id);
+    if(fresh){
+     fresh.classList.add("order-updated");
+     fresh.addEventListener("animationend",()=>fresh.classList.remove("order-updated"),{once:true});
+    }
+   }
+  }else{
+   await renderOrders();
+  }
+ }catch(e){
+  if(card)card.classList.remove("order-loading");
+  alert("Status update failed: "+e.message);
+ }
 }
 async function deleteOrder(id){
  if(!confirm("Delete this order permanently?"))return;
- try{await apiPost({action:"deleteOrder",id});await renderOrders()}
- catch(e){alert("Delete failed: "+e.message)}
+ const card=orderCardEl(id);
+ if(card)card.classList.add("order-loading");
+ try{
+  await apiPost({action:"deleteOrder",id});
+  orders=orders.filter(x=>String(x.id)!==String(id));
+  saveData();
+  if(card){
+   card.classList.remove("order-loading");
+   card.classList.add("order-removing");
+   card.addEventListener("animationend",()=>card.remove(),{once:true});
+  }
+ }catch(e){
+  if(card)card.classList.remove("order-loading");
+  alert("Delete failed: "+e.message);
+ }
 }
 
 /* MENU MANAGEMENT */
